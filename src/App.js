@@ -1,25 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import 'antd/dist/antd.css';
+import './i18n';
+import PrivateRoute from './privaterule/PrivateRoute';
+import UnPrivateRoute from './privaterule/UnPrivateRoute';
+import Homepage from './views';
+import Login from './views/login';
+import Register from './views/register';
+import Dashboard from './views/dashboard';
+import Profile from './views/profile';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Route path='/' exact component={Homepage} />
+      <UnPrivateRoute path='/login' component={Login} />
+      <UnPrivateRoute path='/register' roles={['user', 'admin']} component={Register} />
+      <PrivateRoute path='/dashboard' roles={['user', 'admin']} component={Dashboard} />
+      <PrivateRoute path='/profile' roles={['user', 'admin']} component={Profile} />
+    </Router>
   );
 }
 

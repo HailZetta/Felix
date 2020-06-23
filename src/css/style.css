@@ -1,0 +1,95 @@
+.container{
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.bg-white{
+  background-color: #fff;
+}
+
+.shadow{
+  box-shadow: rgba(0, 0, 0, 0.2) 0.5px 0.5px 20px;
+}
+
+.text-highlight{
+  font-size: 5em;
+  font-weight: 900;
+  background: #D66D75;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-white{
+  color: #fff;
+}
+
+.text-button{
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+.pointer{
+  cursor: pointer;
+}
+
+.pointer:hover{
+  color: #D66D75;
+}
+
+.button, .ant-btn-primary:focus{
+  border: none;
+  background: #D66D75;
+  transition: 0.4s;
+}
+
+.button:hover{
+  background: #E29587;
+  transition: 0.4s;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #D66D75;
+  border-color: #D66D75;
+}
+
+.ant-checkbox-checked::after{
+  border: 1px solid #D66D75;
+}
+
+.form-input, .button, .message{
+  border-radius: 10px;
+}
+
+.p-20{
+  padding: 20px;
+}
+
+.p-30{
+  padding: 30px;
+}
+
+.pt-10{
+  padding-top: 10px;
+}
+
+.pt-20{
+  padding-top: 20px;
+}
+
+.pt-30{
+  padding-top: 30px;
+}
+
+.pt-50{
+  padding-top: 50px;
+}
+
+.px-30{
+  padding-left: 30px;
+  padding-right: 30px;
+}
+
+.mb-20{
+  margin-bottom: 20px;
+}

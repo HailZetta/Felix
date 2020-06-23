@@ -1,0 +1,15 @@
+{
+  "lang": "en",
+  "home": "Home",
+  "about": "About us",
+  "gallery": "Gallery",
+  "contact": "Contact",
+  "login": "Login",
+  "register": "Sign up",
+  "logout": "Logout",
+  "requestform": "Request Form",
+  "password": "Password",
+  "password2": "Confirm Password",
+  "remember": "Remember me",
+  "profile": "Your Profile"
+}
