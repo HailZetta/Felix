@@ -10,6 +10,7 @@ router.post('/create', passport.authenticate('jwt', {session : false}), (req, re
   let {fullname, tel, city, guestlist, invitation} = req.body;
   if (fullname) {
     const newProfile = new Profile({fullname, tel, city, guestlist, invitation});
+    console.log(newProfile)
     newProfile.save(err => {
       if (err) {
         res.status(500).json({message : 'Xảy ra lỗi', message_en: 'Errors'});

@@ -69,8 +69,8 @@ router.get('/logout', passport.authenticate('jwt', {session: false}), (req, res)
 });
 
 router.get('/authenticated', passport.authenticate('jwt', {session : false}), (req, res) => {
-  const {email, role} = req.user;
-  res.status(200).json({isAuthenticated : true, user : {email, role}});
+  const {email, role, profile} = req.user;
+  res.status(200).json({isAuthenticated : true, user : {email, role, profile}});
 });
 
 router.put('/update/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {

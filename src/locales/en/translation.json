@@ -11,5 +11,8 @@
   "password": "Password",
   "password2": "Confirm Password",
   "remember": "Remember me",
-  "profile": "Your Profile"
+  "profile": "Your Profile",
+  "name": "Your Name",
+  "tel": "Phone Number",
+  "city": "City"
 }

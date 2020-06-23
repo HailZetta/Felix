@@ -7,6 +7,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { AuthContext } from '../context/AuthContext';
 import '../css/style.css';
 import AuthService from '../services/AuthService';
+import ProfileService from '../services/ProfileService';
 import DropdownTemp from './dropdown';
 
 const { Text } = Typography;
@@ -28,6 +29,10 @@ const Topbar = () => {
       }
     });
   }
+
+  // useEffect(() => {
+  //   ProfileService.profileListId(user ? user.profile._id : null).then(data => setProfile(data));
+  // }, []);
 
   const profileDropdown = () => {
     return (
@@ -96,8 +101,6 @@ const Topbar = () => {
       </Row>
     )
   }
-
-  console.log(user);
 
   return (
     <Row justify='end' className='container pt-10'>

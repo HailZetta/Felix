@@ -11,5 +11,8 @@
   "password": "Mật khẩu",
   "password2": "Xác nhận mật khẩu",
   "remember": "Lưu tài khoản",
-  "profile": "Thông tin tài khoản"
+  "profile": "Thông tin tài khoản",
+  "name": "Tên của bạn",
+  "tel": "Số điện thoại",
+  "city": "Tỉnh/Thành phố"
 }

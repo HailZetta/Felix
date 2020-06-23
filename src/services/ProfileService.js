@@ -3,9 +3,11 @@ export default {
     const res = await (fetch('/profile/create', {
       method: 'post',
       body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
+      headers : {
+        'Content-Type' : 'application/json'
+      }
     }))
-
+    console.log([data, res.status]);
     if (res.status !== 401) {
       return (res.json().then(data => data))
     } else {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Row, Col, Input, Form, Button, Typography, Alert } from 'antd';
 import AuthService from '../services/AuthService';
+import ProfileService from '../services/ProfileService';
 import '../css/style.css';
 import Topbar from '../components/topbar';
 import { Link } from 'react-router-dom';
@@ -10,20 +11,26 @@ const { Text } = Typography;
 
 const Register = (props) => {
   let [user, setUser] = useState({email: '', password: '', password2: '', role: 'user'});
+  let [profile, setProfile] = useState({fullname: '', tel: '', city: ''});
   let [message, setMessage] = useState(null);
 
   const { t } = useTranslation();
 
   const registerFunc = (e) => {
     e.preventDefault();
-    AuthService.register(user).then(data => {
-      if (data.message) {
-        setMessage(data.message[0])
-      }
-      if (!data.messageError) {
-        props.history.push('/dashboard');
-      }
-    });
+    if (user.email && user.password && user.password2 && profile.fullname) {
+      AuthService.register(user).then(data => {
+        if (data.message) {
+          setMessage(data.message[0])
+        }
+        if (!data.messageError) {
+          ProfileService.profileCreate(profile)
+          props.history.push('/login');
+        }
+      });
+    } else {
+      setMessage({vi: 'Vui lòng điền đủ tên, email và password', en: 'Fill Name, Email and Password'})
+    }
   };
 
   const registerForm = () => {
@@ -43,9 +50,27 @@ const Register = (props) => {
           <Col xs={24} md={7}>
             <Form title={t('login')} layout='vertical'>
               <Form.Item>
+                <Input size='large' placeholder={t('name')} value={profile.fullname} type='text' className='form-input' onChange={e => setProfile({
+                  ...profile,
+                  fullname: e.target.value,
+                })} />
+              </Form.Item>
+              <Form.Item>
                 <Input size='large' placeholder='Email' value={user.email} type='email' className='form-input' onChange={e => setUser({
                   ...user,
                   email: e.target.value,
+                })} />
+              </Form.Item>
+              <Form.Item>
+                <Input size='large' placeholder={t('tel')} value={profile.tel} type='tel' className='form-input' onChange={e => setProfile({
+                  ...profile,
+                  tel: e.target.value,
+                })} />
+              </Form.Item>
+              <Form.Item>
+                <Input size='large' placeholder={t('city')} value={profile.city} type='text' className='form-input' onChange={e => setProfile({
+                  ...profile,
+                  city: e.target.value,
                 })} />
               </Form.Item>
               <Form.Item>
@@ -76,7 +101,7 @@ const Register = (props) => {
       </div>
     )
   }
-
+  
   return (
     <div>
       <Topbar />
