@@ -14,5 +14,8 @@
   "profile": "Your Profile",
   "name": "Your Name",
   "tel": "Phone Number",
-  "city": "City"
+  "city": "City",
+  "welcome": "Welcome!",
+  "name-question": "How can we call you?",
+  "submit": "Submit"
 }

@@ -13,9 +13,17 @@
 }
 
 .text-highlight{
-  font-size: 5em;
+  font-size: 4em;
   font-weight: 900;
   background: #D66D75;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-rainbow{
+  font-size: 5em;
+  font-weight: 900;
+  background: linear-gradient(to left, #FF0018, #FFA52C, #FFFF41, #008018, #0000F9, #86007D);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -83,6 +91,11 @@
 
 .pt-50{
   padding-top: 50px;
+}
+
+.px-20{
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .px-30{

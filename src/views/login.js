@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Row, Col, Input, Form, Button, Typography, Checkbox, Alert } from 'antd';
+import { Row, Col, Input, Form, Button, Typography, Alert } from 'antd'; //Checkbox
 import {AuthContext} from '../context/AuthContext';
 import AuthService from '../services/AuthService';
 import '../css/style.css';
@@ -12,7 +12,7 @@ const { Text } = Typography;
 const Login = (props) => {
   let [user, setUser] = useState({email: '', password: ''});
   let [message, setMessage] = useState(null);
-  let [checked, setChecked] = useState(true);
+  // let [checked, setChecked] = useState(true);
   const authContext = useContext(AuthContext);
 
   const { t } = useTranslation();
@@ -24,16 +24,21 @@ const Login = (props) => {
       if (isAuthenticated) {
         authContext.setUser(user);
         authContext.setIsAuthenticated(isAuthenticated);
-        props.history.push('/dashboard');
+        console.log(user)
+        if (user.profile) {
+          props.history.push('/dashboard');
+        } else {
+          props.history.push('/welcome');
+        }
       } else {
         setMessage(message);
       }
     });
   }
 
-  const handleCheckbox = () => {
-    setChecked(!checked);
-  }
+  // const handleCheckbox = () => {
+  //   setChecked(!checked);
+  // }
 
   const loginForm = () => {
     return (

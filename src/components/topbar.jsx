@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import i18n from '../i18n';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Row, Col, Button, Avatar, Typography, Dropdown, Divider } from 'antd';
+import { Row, Col, Button, Avatar, Typography, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { AuthContext } from '../context/AuthContext';
 import '../css/style.css';
@@ -30,9 +30,9 @@ const Topbar = () => {
     });
   }
 
-  // useEffect(() => {
-  //   ProfileService.profileListId(user ? user.profile._id : null).then(data => setProfile(data));
-  // }, []);
+  useEffect(() => {
+    ProfileService.profileListId(user ? user.profile : null).then(data => setProfile(data));
+  }, []);
 
   const profileDropdown = () => {
     return (
@@ -46,7 +46,7 @@ const Topbar = () => {
           {profile && profile.fullname ?
             <Row justify='center' className='pt-10'>
               <Col>
-                <h3 strong={true}>Hi, {profile.fullname}!</h3>
+                <h3 strong='true'>Hi, {profile.fullname}!</h3>
               </Col>
             </Row>
           :
@@ -60,13 +60,13 @@ const Topbar = () => {
           <Row justify='start' className='pt-20'>
             <Col>
               <Link to='/profile'>
-                <Text className='pointer' strong={true}>{t('profile')}</Text>
+                <Text className='pointer' strong='true'>{t('profile')}</Text>
               </Link>
             </Col>
           </Row>
           <Row justify='start' className='pt-10'>
             <Col>
-              <Text type='text' onClick={logOut} strong={true} className='pointer'>{t('logout')}</Text>
+              <Text type='text' onClick={logOut} strong='true' className='pointer'>{t('logout')}</Text>
             </Col>
           </Row>
         </div>
@@ -76,13 +76,13 @@ const Topbar = () => {
 
   const topbarButton = () => {
     return (
-      <Row justify='end' gutter={20} align='middle'>
-        <Col>
-          <Text type='secondary' onClick={() => changeLanguage('vi')} className='pointer' strong={true}>VI</Text>
-          <Text type='secondary' strong={true}> / </Text>
-          <Text type='secondary' onClick={() => changeLanguage('en')} className='pointer' strong={true}>EN</Text>
+      <Row justify='end' align='middle'>
+        <Col className='px-20'>
+          <Text type='secondary' onClick={() => changeLanguage('vi')} className='pointer' strong='true'>VI</Text>
+          <Text type='secondary' strong='true'> / </Text>
+          <Text type='secondary' onClick={() => changeLanguage('en')} className='pointer' strong='true'>EN</Text>
         </Col>
-        <Col>
+        <Col className='px-20'>
           {isAuthenticated ?
             <Dropdown overlay={profileDropdown()} placement='bottomRight'>
               <Avatar icon={<UserOutlined />} />

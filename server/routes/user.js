@@ -52,14 +52,14 @@ router.get('/list', (req, res) => {
 
 router.post('/login', passport.authenticate('local', {session: false}), (req, res) => {
   if (req.isAuthenticated()){
-    const {_id, email, role} = req.user;
+    const {_id, email, role, profile} = req.user;
     const token = JWT.sign({
       iss : "ZettaCo",
       sub : _id
     }, "zetta", {expiresIn: "12h"});
 
     res.cookie('access_token', token, {httpOnly: true, sameSite: true}); 
-    res.status(200).json({isAuthenticated: true, user: {email, role}});
+    res.status(200).json({isAuthenticated: true, user: {email, role, profile}});
   }
 });
 

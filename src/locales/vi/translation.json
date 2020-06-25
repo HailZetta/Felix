@@ -14,5 +14,8 @@
   "profile": "Thông tin tài khoản",
   "name": "Tên của bạn",
   "tel": "Số điện thoại",
-  "city": "Tỉnh/Thành phố"
+  "city": "Tỉnh/Thành phố",
+  "welcome": "Welcome!",
+  "name-question": "Tên của bạn",
+  "submit": "Gửi"
 }

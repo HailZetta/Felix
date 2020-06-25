@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
 });
 
 const filter = (req, file, cb) => {
-  if (file.mimetype === 'application/zip') {
+  if (file.mimetype === 'application/zip' || file.mimetype === 'application/x-zip-compressed') {
     return cb(null, true);
   } else {
     return cb(null, false);
@@ -30,19 +30,29 @@ const upload = multer({ storage: storage, fileFilter: filter });
 mongoose.set('useFindAndModify', false);
 
 router.post('/upload', upload.single('templateFile'), passport.authenticate('jwt', {session : false}), (req, res) => {
-  let {name, name_en, content, type, status} = req.body;
-  let uploadFile = req.file.path;
-  fs.createReadStream(uploadFile).pipe(unzipper.Extract({ path: '../src/views/templates' }));
-  fs.unlinkSync(uploadFile, (err) => {
-    if (err) throw err;
-    console.log(data);
-  });
+  if (req.file) {
+    let {name, name_en, content, type, status} = req.body;
+    let uploadFile = req.file.path;
+    fs.createReadStream(uploadFile).pipe(unzipper.Extract({ path: '../src/views/templates' }));
+    fs.unlinkSync(uploadFile, (err) => {
+      if (err) throw err;
+    });
 
-  let templateFile = uploadFile.slice(0, -4);
-  let newTemplate = new Template({name, name_en, content, templateFile, type, status});
-  newTemplate.save()
-  .then(data => res.json({data}))
-  .catch(err => res.json(err));
+    let templateFile = uploadFile.slice(0, -4);
+    let newTemplate = new Template({name, name_en, content, templateFile, type, status});
+    console.log(newTemplate);
+    newTemplate.save()
+    .then(data => {
+      console.log(data)
+      res.json({data})
+    })
+    .catch(err => {
+      console.log(err)
+      res.json({err})
+    });
+  } else {
+    res.json({message: 'No template file'});
+  }
 });
 
 router.get('/list', passport.authenticate('jwt', {session : false}), (req, res) => {
