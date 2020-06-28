@@ -31,19 +31,20 @@ mongoose.set('useFindAndModify', false);
 
 router.post('/upload', upload.single('templateFile'), passport.authenticate('jwt', {session : false}), (req, res) => {
   if (req.file) {
-    let {name, name_en, content, type, status} = req.body;
+    let {name, name_en, type, status} = req.body;
+    let content = JSON.parse(req.body.content);
+
     let uploadFile = req.file.path;
     fs.createReadStream(uploadFile).pipe(unzipper.Extract({ path: '../src/views/templates' }));
     fs.unlinkSync(uploadFile, (err) => {
       if (err) throw err;
     });
 
-    let templateFile = uploadFile.slice(0, -4);
+    let templateFile = uploadFile.slice(0, -4).replace(/\\/g, "/");
     let newTemplate = new Template({name, name_en, content, templateFile, type, status});
-    console.log(newTemplate);
+    
     newTemplate.save()
     .then(data => {
-      console.log(data)
       res.json({data})
     })
     .catch(err => {
@@ -55,13 +56,13 @@ router.post('/upload', upload.single('templateFile'), passport.authenticate('jwt
   }
 });
 
-router.get('/list', passport.authenticate('jwt', {session : false}), (req, res) => {
+router.get('/list', (req, res) => {
   Template.find()
   .then(data => res.json(data))
   .catch(err => res.json(err));
 });
 
-router.get('/list/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
+router.get('/list/:id', (req, res) => {
   Template.findById(req.params.id)
   .then(data => res.json(data))
   .catch(err => res.json(err));
