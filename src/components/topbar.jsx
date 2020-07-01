@@ -4,11 +4,15 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Row, Col, Button, Avatar, Typography, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import Texty from 'rc-texty';
+import 'rc-texty/assets/index.css';
 import { AuthContext } from '../context/AuthContext';
 import '../css/style.css';
+import logo from '../assets/logo.png';
 import AuthService from '../services/AuthService';
 import ProfileService from '../services/ProfileService';
 import DropdownTemp from './dropdown';
+import Navbar from './navbar';
 
 const { Text } = Typography;
 
@@ -18,6 +22,7 @@ const changeLanguage = (lng) => {
 
 const Topbar = () => {
   let [profile, setProfile] = useState();
+  let [show, setShow] = useState(false);
   const {isAuthenticated, user, setIsAuthenticated, setUser} = useContext(AuthContext);
   const { t } = useTranslation();
 
@@ -28,6 +33,14 @@ const Topbar = () => {
         setIsAuthenticated(false);
       }
     });
+  }
+
+  const mouseDown = () => {
+    setShow(true);
+  }
+
+  const mouseLeave = () => {
+    setShow(false);
   }
 
   useEffect(() => {
@@ -77,7 +90,7 @@ const Topbar = () => {
   const topbarButton = () => {
     return (
       <Row justify='end' align='middle'>
-        <Col className='px-20'>
+        <Col className='px-20 language-button'>
           <Text type='secondary' onClick={() => changeLanguage('vi')} className='pointer' strong='true'>VI</Text>
           <Text type='secondary' strong='true'> / </Text>
           <Text type='secondary' onClick={() => changeLanguage('en')} className='pointer' strong='true'>EN</Text>
@@ -90,10 +103,14 @@ const Topbar = () => {
           :
             <div>
               <Link to='/register'>
-                <Button type='text'>{t('register')}</Button>
+                <Button type='text'>
+                  <Text strong='true'>{t('register')}</Text>
+                </Button>
               </Link>
               <Link to='/login'>
-                <Button type='text'>{t('login')}</Button>
+                <Button type='text'>
+                  <Text strong='true'>{t('login')}</Text>
+                </Button>
               </Link>
             </div>
           }
@@ -102,10 +119,38 @@ const Topbar = () => {
     )
   }
 
+  const topbarLogo = () => {
+    return (
+      <Row align='middle'>
+        <Col className='bg-grey' onMouseOver={mouseDown} onMouseLeave={mouseLeave}>
+          <Link to='/'>
+            <img className='p-10 pt-20 w-60 z-index-1' src={logo} />
+          </Link>
+        </Col>
+        <Col>
+          <Texty type='right' mode='sync' duration={400} className='pl-10 topbar-brand text-grey'>
+            {show && 'Felix'}
+          </Texty>
+        </Col>
+      </Row>
+      
+    )
+  }
+
   return (
-    <Row justify='end' className='container pt-10'>
+    <Row justify='space-between' align='middle' className='container'>
       <Col>
-        {topbarButton()}
+        {topbarLogo()}
+      </Col>
+      <Col>
+        <Row align='middle'>
+          <Col>
+            <Navbar />
+          </Col>
+          <Col>
+            {topbarButton()}
+          </Col>
+        </Row>
       </Col>
     </Row>
   )

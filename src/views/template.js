@@ -10,7 +10,7 @@ const Template = ({match, location}) => {
   const {isAuthenticated} = useContext(AuthContext);
   let [templateInfo, setTemplateInfo] = useState();
   const {params: { templateId }} = match;
-
+  
   const { t } = useTranslation();
 
   useEffect(() => {

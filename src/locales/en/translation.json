@@ -17,5 +17,7 @@
   "city": "City",
   "welcome": "Welcome!",
   "name-question": "How can we call you?",
-  "submit": "Submit"
+  "submit": "Submit",
+  "create": "Create New Invitation",
+  "history": "History"
 }

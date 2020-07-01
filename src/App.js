@@ -13,6 +13,8 @@ import Welcome from './views/welcome';
 import AdminPanel from './views/adminpanel';
 import Template from './views/template';
 import Library from './views/library';
+import ChooseCategory from './views/create.category';
+import ChooseTemplate from './views/create.template';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
       <PrivateRoute path='/welcome' roles={['user', 'admin']} component={Welcome} />
       <PrivateRoute path='/dashboard' roles={['user', 'admin']} component={Dashboard} />
       <PrivateRoute path='/profile' roles={['user', 'admin']} component={Profile} />
+      <PrivateRoute path='/choose-category' roles={['user', 'admin']} component={ChooseCategory} />
+      <PrivateRoute path='/choose-template/:typeId' roles={['user', 'admin']} component={ChooseTemplate} />
     </Router>
   );
 }

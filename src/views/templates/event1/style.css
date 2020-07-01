@@ -1,0 +1,207 @@
+@font-face{
+    font-family: serif;
+    src: url('chrysuni.ttf');
+}
+
+*{
+    font-family: serif;
+}
+
+#autoplay{
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+#autoplay p{
+    font-family: sans-serif;
+}
+
+#autoplayBtn{
+    text-align: center;
+    text-shadow: 0 0 7px #000;
+    padding: 30vh 0;
+}
+
+#autoplayBtn i{
+    font-size: 50px;
+}
+
+#background{
+    position: fixed;
+    z-index: -1;
+    margin-top: -10vw;
+    width: 250%;
+}
+
+#logo img{
+    width: 50vw;
+}
+
+#eventTitle{
+    margin-top: 7vh;
+}
+
+#eventTitle p, #guest{
+    font-family: 'Judson', serif!important;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#eventTitle h1{
+    font-family: 'Allura', cursive;
+    font-size: 4.6em;
+    background: linear-gradient(to bottom, #fff -10%, #c89c43 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#guestName{
+    font-size: 1.2em;
+}
+
+#time{
+    border-right: 2px solid #fff;
+}
+
+#hour{
+    font-size: 1.8em;
+}
+
+#day{
+    font-size: 1.2em;
+}
+
+#date, #year{
+    font-size: 1.5em;
+}
+
+#place{
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+#guestName, #hour, #date, #place{
+    background: linear-gradient(to bottom, #fff 0%, #c89c43 120%);
+	background-clip: text;
+	-webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#checkInBtn{
+    background: linear-gradient(to bottom, #fff 0%, #c89c43 120%);
+}
+
+#qrCodeArea{
+    width: 0;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: #fff;
+    z-index: 2;
+    overflow-x: hidden;
+    transition: 0.5s;
+}
+
+#qrCodeArea *{
+    font-family: Arial, Helvetica, sans-serif;
+    color:#0d0917
+}
+
+.closebtn{
+    position: absolute;
+    top: 10px;
+    right: 35px;
+    font-size: 40px;
+    color: #000;
+}
+
+.felixInfo{
+    transition-delay: 1s;
+    -webkit-transition-delay: 1s;
+}
+
+#felixLogo{
+    width: 20%;
+}
+
+.felixInfo p{
+    font-size: 0.7em;
+}
+
+#footer{
+    width: 250%;
+    z-index: 1;
+}
+
+@media only screen and (min-width: 992px){
+    #background{
+        margin-top: -5vw;
+        width: 100%;
+    }
+    
+    #logo img{
+        width: 300px;
+    }
+
+    #autoplay{
+        background-color: #000;
+        background-position: center center;
+        background-size: auto 100vh;
+    }
+
+    #eventTitle p, #guest{
+        font-size: 1.5em;
+        letter-spacing: 1.2px;
+    }
+    
+    #eventTitle h1{
+        font-size: 9.6em;
+    }
+    
+    #guestName{
+        font-size: 1.2em;
+    }
+
+    #time1{
+        border-right: 2px solid #fff;
+    }
+    
+    #hour{
+        font-size: 2.2em;
+    }
+    
+    #day{
+        font-size: 2em;
+    }
+    
+    #date, #year{
+        font-size: 2em;
+    }
+    
+    #place{
+        font-size: 1.8em;
+    }
+
+    #address{
+        font-size: 1.5em;
+    }
+
+    #felixLogo{
+        width: 7%;
+    }
+    
+    .felixInfo p{
+        font-size: 0.8em;
+    }
+
+    #footer{
+        width: 100%;
+    }
+}

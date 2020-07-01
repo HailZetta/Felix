@@ -1,10 +1,10 @@
 export default {
-  profileCreate: async (data) => {
-    const res = await (fetch('/profile/create', {
+  typeCreate: async (data) => {
+    const res = await (fetch('/type/create', {
       method: 'post',
       body: JSON.stringify(data),
-      headers : {
-        'Content-Type' : 'application/json'
+      headers: {
+        'Content-Type': 'application/json'
       }
     }))
     if (res.status !== 401) {
@@ -13,10 +13,10 @@ export default {
       return (res.json({ message: { msgBody: "Error has occured", msgError: true } }))
     }
   },
-  
-  profileList: () => {
+
+  typeList: () => {
     return (
-      fetch('/profile/list')
+      fetch('/type/list')
       .then(response => {
         if(response.status !== 401) {
           return (response.json('Get data')
@@ -28,9 +28,9 @@ export default {
     )
   },
 
-  profileListId: (id) => {
+  typeListId: (id) => {
     return (
-      fetch('/profile/list/' + id)
+      fetch('/type/list/' + id)
       .then(response => {
         if(response.status !== 401) {
           return (response.json('Get data of id: ' + id)
@@ -42,8 +42,9 @@ export default {
     )
   },
 
-  profileUpdate: async (data, id) => {
-    const res = await (fetch('/profile/update/' + id, {
+  typeUpdate: async (data, id) => {
+    console.log(id)
+    const res = await (fetch('/type/update/' + id, {
       method: 'put',
       body: JSON.stringify(data),
       headers: {
@@ -57,4 +58,18 @@ export default {
       return (res.json({ message: { msgBody: "Error has occured", msgError: true } }))
     }
   },
-};
+
+  typeDelete: (id) => {
+    return (
+      fetch('/type/delete/' + id, {method: 'delete'})
+      .then(response => {
+        if(response.status !== 401) {
+          return (response.json('Delete data of id: ' + id)
+          .then(data => data));
+        } else {
+          return ({message: {msgBody: 'Can not delete data', msgError: true}});
+        }
+      })
+    )
+  },
+}

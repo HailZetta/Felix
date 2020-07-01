@@ -1,21 +1,17 @@
 import React from 'react';
 import { Row, Col, Layout } from 'antd';
 import Topbar from './topbar';
-import Navbar from './header';
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const LayoutWrap = ({children}) => {
   return (
     <div>
-      <Layout style={{backgroundColor: '#f3f2f0'}}>
+      <Layout style={{backgroundColor: '#fff'}}>
         <Topbar />
-        <Header style={{backgroundColor: 'transparent'}}>
-          <Navbar />
-        </Header>
         <Content>
           <Row>
-            <Col>
+            <Col span={24}>
               {children}
             </Col>
           </Row>

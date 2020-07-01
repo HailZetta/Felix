@@ -31,7 +31,7 @@ mongoose.set('useFindAndModify', false);
 
 router.post('/upload', upload.single('templateFile'), passport.authenticate('jwt', {session : false}), (req, res) => {
   if (req.file) {
-    let {name, name_en, type, status} = req.body;
+    let {name, name_en, type, status, price} = req.body;
     let content = JSON.parse(req.body.content);
 
     let uploadFile = req.file.path;
@@ -41,7 +41,7 @@ router.post('/upload', upload.single('templateFile'), passport.authenticate('jwt
     });
 
     let templateFile = uploadFile.slice(0, -4).replace(/\\/g, "/");
-    let newTemplate = new Template({name, name_en, content, templateFile, type, status});
+    let newTemplate = new Template({name, name_en, content, templateFile, type, status, price});
     
     newTemplate.save()
     .then(data => {
@@ -69,13 +69,14 @@ router.get('/list/:id', (req, res) => {
 });
 
 router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
-  let {name, name_en, content, type, status} = req.body;
+  let {name, name_en, content, type, status, price} = req.body;
   let newTemplate = {
     name: name,
     name_en: name_en,
     content: content,
     type: type,
-    status: status
+    status: status,
+    price: price
   }
   Template.findByIdAndUpdate(req.params.id, newTemplate, (err) => {
     if (err) {

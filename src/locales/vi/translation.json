@@ -17,5 +17,7 @@
   "city": "Tỉnh/Thành phố",
   "welcome": "Welcome!",
   "name-question": "Tên của bạn",
-  "submit": "Gửi"
+  "submit": "Gửi",
+  "create": "Tạo thiệp mới",
+  "history": "Thiệp đã tạo"
 }

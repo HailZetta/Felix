@@ -19,11 +19,13 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "passport-remember-me": "0.0.1",
+    "rc-texty": "^0.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-i18next": "^11.7.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "react-transition-group": "^4.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

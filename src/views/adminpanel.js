@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Form, Row, Col, Select, Alert, Typography, Table, Space } from 'antd';
+import { Button, Input, Form, Row, Col, Select, Alert, Typography, Table, Space, Tabs, InputNumber } from 'antd';
 import TemplateService from '../services/TemplateService';
+import TypeService from '../services/TypeService';
 import ModalTemp from '../components/modal';
 import { Link } from 'react-router-dom';
+import Topbar from '../components/topbar';
 
 const { Option } = Select;
-const { TextArea } = Input;
 const { Text } = Typography;
+const { TabPane } = Tabs;
 
-const AdminPanel = (props) => {
-  let [template, setTemplate] = useState({name: '', name_en: '', templateFile: null, status: 'public'});
+const AdminPanel = () => {
+  let [template, setTemplate] = useState({name: '', name_en: '', templateFile: null, status: 'standard', price: null});
   let [templateData, setTemplateData] = useState();
+  let [type, setType] = useState({type: '', type_en: '', template: []});
+  let [typeData, setTypeData] = useState();
+  let [id, setId] = useState();
   let [message, setMessage] = useState(null);
   let [contentData, setContentData] = useState([]);
   let [contentItem, setContentItem] = useState({variable: '', name: '', type: ''});
@@ -18,6 +23,7 @@ const AdminPanel = (props) => {
 
   useEffect(() => {
     TemplateService.templateList().then(data => setTemplateData(data));
+    TypeService.typeList().then(data => setTypeData(data));
   }, []);
 
   let newTemplate = new FormData();
@@ -26,18 +32,7 @@ const AdminPanel = (props) => {
   newTemplate.append('templateFile', template.templateFile);
   newTemplate.append('content', JSON.stringify(contentData));
   newTemplate.append('status', template.status);
-
-  const uploadHandle = () => {
-    TemplateService.uploadTemplate(newTemplate)
-    .then(data => {
-      if (data.message) {
-        setMessage(data.message)
-      }
-      if (!data.messageError) {
-        window.location = '/admin-panel';
-      }
-    });
-  };
+  newTemplate.append('price', template.price);
 
   const ModalForm = () => {
     return (
@@ -68,13 +63,150 @@ const AdminPanel = (props) => {
     )
   }
 
+  const typeCreate = () => {
+    const layout = {
+      labelCol: { span: 4 },
+      wrapperCol: { span: 20 },
+    };
+    
+    const tailLayout = {
+      wrapperCol: { offset: 4, span: 20 },
+    };
+
+    const typeFormData = [
+      {label: 'Loại thiệp', value: 'type'},
+      {label: 'Loại thiệp tiếng Anh', value: 'type_en'},
+      {label: 'Mẫu', value: 'template', type: 'select'}
+    ];
+
+    const uploadHandle = () => {
+      TypeService.typeCreate(type)
+      .then(data => {
+        if (data.message) {
+          setMessage(data.message)
+        }
+        if (!data.messageError) {
+          window.location = '/admin-panel';
+        }
+      });
+    };
+
+    const updateHandle = () => {
+      TypeService.typeUpdate(type, id)
+      .then(data => {
+        if (data.message) {
+          setMessage(data.message)
+        }
+        if (!data.messageError) {
+          window.location = '/admin-panel';
+        }
+      });
+    };
+
+    return (
+      <div>
+        <Row justify='center'>
+          <Col>
+            <h2 className='pt-20'>Thêm loại thiệp</h2>
+          </Col>
+        </Row>
+        <Row justify='center'>
+          <Col span={16}>
+            <Form layout='horizontal' {...layout}>
+              {typeFormData.map((item, index) => (
+                <Form.Item label={item.label} key={index}>
+                  {item.type === 'select' ?
+                    <Select value={Object.values(type)[index]} mode="multiple" onChange={value => setType({
+                      ...type,
+                      [item.value]: value
+                    })}>
+                      {templateData ? templateData.map(item => (
+                        <Option value={item._id} key={item._id}>{item.name}</Option>
+                      )) : null}
+                    </Select>
+                  :
+                    <Input value={Object.values(type)[index]} placeholder={item.label} onChange={e => setType({
+                      ...type,
+                      [item.value]: e.target.value
+                    })} />
+                  }
+                </Form.Item>
+              ))}
+              <Form.Item {...tailLayout}>
+                <Space size='large'>
+                  <Button type='primary' onClick={uploadHandle}>Submit</Button>
+                  <Button type='primary' onClick={updateHandle}>Update</Button>
+                </Space>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
+      </div>
+    )
+  }
+
+  const typeList = () => {
+    const updateHandle = (data) => {
+      setType({
+        type: data.type,
+        type_en: data.type_en,
+        template: data.template,
+      })
+      setId(data._id)
+    }
+
+    const columns=[
+      {title: 'Loại thiệp', dataIndex: 'type'},
+      {title: 'Loại thiệp tiếng Anh', dataIndex: 'type_en'},
+      {title: 'Mẫu thiệp', align: 'center', render: (row) => {
+        return (
+          <div>
+            {row.template.map((item, index) => (
+              <Row key={index} justify='center'>
+                <Col>
+                  <Link to={'/template/' + `${item}`}>
+                    {item}
+                  </Link>
+                </Col>
+              </Row>
+            ))}
+          </div>
+        )
+      }},
+      {title: 'Tùy chọn', align: 'center', render: (row) => {
+        return (
+          <Space>
+            <Button type='dashed' onClick={() => {
+              TypeService.typeDelete(row._id);
+              window.location = '/admin-panel'
+            }}>
+              Xóa loại thiệp
+            </Button>
+            <Button type='dashed' onClick={() => updateHandle(row)}>
+              Cập nhật
+            </Button>
+          </Space>
+        )
+      }}
+    ]
+
+    return (
+      <div className='container pt-50'>
+        <h2 className='text-center'>Danh sách loại thiệp</h2>
+        <Table
+          rowKey='_id'
+          columns={columns}
+          dataSource={typeData}
+          bordered
+        />
+      </div>
+    )
+  }
+
   const templateUpload = () => {
     const layout = {
-      labelCol: { span: 8 },
-      wrapperCol: { span: 16 },
-    };
-    const tailLayout = {
-      wrapperCol: { offset: 8, span: 16 },
+      labelCol: { span: 4 },
+      wrapperCol: { span: 20 },
     };
 
     const showModal = () => {
@@ -92,24 +224,41 @@ const AdminPanel = (props) => {
       setVisible(false);
     }
 
+    const uploadHandle = () => {
+      TemplateService.uploadTemplate(newTemplate)
+      .then(data => {
+        if (data.message) {
+          setMessage(data.message)
+        }
+        if (!data.messageError) {
+          window.location = '/admin-panel';
+        }
+      });
+    };
+
     return (
       <div>
-        <Row justify='center' className='p-20'>
-          <Col span={8}>
+        <Row justify='center'>
+          <Col>
+            <h2 className='pt-20'>Thêm thiệp</h2>
+          </Col>
+        </Row>
+        <Row justify='center'>
+          <Col span={16}>
             {message ? <Alert message={message} type="error" showIcon={true} className='message' /> : null}
           </Col>
         </Row>
         <Row justify='center'>
-          <Col span={8}>
+          <Col span={16}>
             <Form {...layout}>
               <Form.Item label='Tên thiệp'>
-                <Input size='large' placeholder='Tên thiệp' value={template.name} type='text' className='form-input' onChange={e => setTemplate({
+                <Input placeholder='Tên thiệp' value={template.name} type='text' onChange={e => setTemplate({
                   ...template,
                   name: e.target.value,
                 })} />
               </Form.Item>
               <Form.Item label='Tên thiệp tiếng Anh'>
-                <Input size='large' placeholder='Tên thiệp tiếng Anh' value={template.name_en} type='text' className='form-input' onChange={e => setTemplate({
+                <Input placeholder='Tên thiệp tiếng Anh' value={template.name_en} type='text' onChange={e => setTemplate({
                   ...template,
                   name_en: e.target.value,
                 })} />
@@ -124,19 +273,31 @@ const AdminPanel = (props) => {
                 />
               </Form.Item>
               <Form.Item label='Trạng thái'>
-                <Select defaultValue='public' onChange={value => setTemplate({
+                <Select defaultValue='standard' onChange={value => setTemplate({
                   ...template,
                   status: value
                 })}>
-                  <Option value='public'>Public</Option>
-                  <Option value='private'>Private</Option>
+                  <Option value='standard'>Standard</Option>
+                  <Option value='premium'>Premium</Option>
                 </Select>
+              </Form.Item>
+              <Form.Item label='Giá'>
+                <InputNumber
+                  formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                  parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                  placeholder='Giá'
+                  value={template.price}
+                  onChange={value => setTemplate({
+                    ...template,
+                    price: value,
+                  })}
+                />
               </Form.Item>
             </Form>
           </Col>
         </Row>
         <Row justify='center pb-20'>
-          <Col span={8}>
+          <Col span={16}>
             <Row justify='space-between' className='pb-10'>
               <Col>
                 <Text>Nội dung:</Text>
@@ -186,26 +347,27 @@ const AdminPanel = (props) => {
       {title: 'Tên thiệp', dataIndex: 'name'},
       {title: 'Tên tiếng Anh', dataIndex: 'name_en'},
       {title: 'Trạng thái', dataIndex: 'status'},
-      {title: 'Path', dataIndex: 'templateFile'},
-      {title: 'Tùy chọn', render: (row) => {
-        return (
-          <Space>
-            <Button type='dashed' onClick={() => {
-              TemplateService.templateDelete(row._id);
-              window.location = '/admin-panel'
-            }}>Xóa thiệp</Button>
-            <Link to={'/template/' + `${row._id}`}>
-              <Button type='dashed'>Xem thiệp</Button>
-            </Link>
-          </Space>
-        )
-      }}
+      {title: 'Price', render: (row) => (
+        <span>{row ? row.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") : null}</span>
+      )},
+      {title: 'Tùy chọn', render: (row) => (
+        <Space>
+          <Button type='dashed' onClick={() => {
+            TemplateService.templateDelete(row._id);
+            window.location = '/admin-panel'
+          }}>Xóa thiệp</Button>
+          <Link to={'/template/' + `${row._id}`}>
+            <Button type='dashed'>Xem thiệp</Button>
+          </Link>
+        </Space>
+      )}
     ]
 
     return (
       <div className='container pt-50'>
         <h2 className='text-center'>Danh sách thiệp</h2>
         <Table
+          rowKey='_id'
           columns={columns}
           dataSource={templateData}
           bordered
@@ -216,13 +378,22 @@ const AdminPanel = (props) => {
 
   return (
     <div>
-      <Row justify='center'>
-        <Col>
-          <h1 className='pt-20 text-rainbow'>Admin Panel</h1>
+      <Topbar />
+      <Row className='container'>
+        <h1 className='pt-20 text-rainbow'>Admin Panel</h1>
+        <Col span={24}>
+          <Tabs defaultActiveKey='1' size='small' type='card'>
+            <TabPane tab='Category' key={1}>
+              {typeCreate()}
+              {typeList()}
+            </TabPane>
+            <TabPane tab='Template' key={2}>
+              {templateUpload()}
+              {templateDataList()}
+            </TabPane>
+          </Tabs>
         </Col>
       </Row>
-      {templateUpload()}
-      {templateDataList()}
     </div>
   )
 };

@@ -7,7 +7,8 @@ const TemplateSchema = new Schema({
   name_en: {type: String},
   templateFile: {type: String},
   content: [{type: Schema.Types.Mixed}],
-  status: {type: String, enum: ['public', 'private']}
+  status: {type: String, enum: ['standard', 'premium']},
+  price: {type: Number}
 });
 
 const Template = mongoose.model('template', TemplateSchema);

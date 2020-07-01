@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 const { Text } = Typography;
 
+
 const Login = (props) => {
   let [user, setUser] = useState({email: '', password: ''});
   let [message, setMessage] = useState(null);
@@ -36,6 +37,12 @@ const Login = (props) => {
     });
   }
 
+  const loginEnter = (e) => {
+    if (e.key === 'Enter') {
+      loginFunc(e)
+    }
+  }
+
   // const handleCheckbox = () => {
   //   setChecked(!checked);
   // }
@@ -57,13 +64,13 @@ const Login = (props) => {
           <Col xs={24} md={7}>
             <Form title={t('login')} layout='vertical'>
               <Form.Item>
-                <Input size='large' placeholder='Email' value={user.email} type='email' className='form-input' onChange={e => setUser({
+                <Input size='large' placeholder='Email' value={user.email} type='email' className='form-input' onKeyDown={loginEnter} onChange={e => setUser({
                   ...user,
                   email: e.target.value,
                 })} />
               </Form.Item>
               <Form.Item>
-                <Input.Password size='large' placeholder={t('password')} value={user.password} type='password' className='form-input' onChange={e => setUser({
+                <Input.Password size='large' placeholder={t('password')} value={user.password} type='password' className='form-input' onKeyDown={loginEnter} onChange={e => setUser({
                   ...user,
                   password: e.target.value,
                 })} />

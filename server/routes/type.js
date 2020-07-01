@@ -7,10 +7,10 @@ require('../config/passport');
 mongoose.set('useFindAndModify', false);
 
 router.post('/create', passport.authenticate('jwt', {session : false}), (req, res) => {
-  let {type, template} = req.body;
+  let {type, type_en, template} = req.body;
 
   if (type) {
-    const newType = new InvitationType({type, template});
+    const newType = new InvitationType({type, type_en, template});
     newType.save()
     .then(res.json(newType))
     .catch(err => console.log(err));
@@ -24,13 +24,16 @@ router.get('/list', passport.authenticate('jwt', {session : false}), (req, res) 
 });
 
 router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req, res, next) => {
-  const {type, template} = req.body;
-  const newType = {
+  let {type, type_en, template} = req.body;
+  let newType = {
     type: type,
+    type_en: type_en,
     template: template
   };
 
-  InvitationType.findByIdAndUpdate(req.params.id, newType, (err, data) => {
+  console.log(newType, req.params.id);
+
+  InvitationType.findByIdAndUpdate(req.params.id, newType, (err) => {
     if (err) {
       return next(err);
     } else {
