@@ -14,7 +14,7 @@ class TemplateContent extends Component {
         <img src={logo} alt="" />
         <p>Tổ chức: {this.props.inviter}</p>
         <p>Tên khách hàng: {this.props.guest}</p>
-        <p>Thời gian: {this.props.time}</p>
+        <p>Thời gian: {this.props.time.format('DD/MM/YYYY')}</p>
         <p>Địa điểm: {this.props.address}</p>
       </div>
     );

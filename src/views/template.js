@@ -53,7 +53,7 @@ const Template = ({match, location}) => {
         )
       } else {
         return (
-          <div>
+          <div className='container'>
             <Suspense fallback={<div>Loading...</div>}>
               <Content {...props} />
             </Suspense>

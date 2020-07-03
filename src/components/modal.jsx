@@ -9,6 +9,8 @@ class ModalTemp extends Component {
         visible={this.props.visible}
         onOk={this.props.handleOk}
         onCancel={this.props.handleCancel}
+        footer={this.props.footer}
+        style={this.props.style}
       >
         {this.props.children}
       </Modal>

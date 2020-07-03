@@ -18,6 +18,8 @@
   "welcome": "Welcome!",
   "name-question": "How can we call you?",
   "submit": "Submit",
+  "save": "Save",
+  "preview": "Preview",
   "create": "Create New Invitation",
   "history": "History"
 }

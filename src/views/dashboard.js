@@ -37,7 +37,7 @@ const Dashboard = () => {
     return (
       <Row gutter={20} justify={window.innerWidth < 700 ? 'center' : 'end'} className='pt-10'>
         <Col>
-          <Link to='/choose-category'>
+          <Link to='/create-invitation'>
             <Button size='large' type='primary' className='text-button button'>
               <PlusOutlined />
               {t('create')}

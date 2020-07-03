@@ -1,10 +1,14 @@
 export default {
-  uploadTemplate: async (data) => {
-    const res = await (fetch('/template/upload', {
+  invitationCreate: async (data) => {
+    const res = await (fetch('/invitation/create', {
       method: 'post',
-      body: data
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type' : 'application/json'
+      }
     }))
     .then(data => data)
+    console.log(JSON.stringify(data))
     if (res.status !== 401) {
       return (res.json().then(data => data))
     } else {
@@ -12,37 +16,28 @@ export default {
     }
   },
 
-  templateList: () => {
+  invitationList: () => {
     return (
-      fetch('/template/list')
+      fetch('/invitation/list')
       .then(response => {
         if(response.status !== 401) {
           return (response.json('Get data')
           .then(data => data));
         } else {
-          return ({message: {msgBody: "Can not get data", msgError: true}});
+          return ({message: {msgBody: "Can not get data",msgError: true}});
         }
       })
     )
   },
 
-  templateListId: (id) => {
-    return (
-      fetch('/template/list/' + id)
-      .then(response => {
-        if(response.status !== 401) {
-          return (response.json('Get data of id: ' + id).then(data => data));
-        } else {
-          return ({message: {msgBody: 'Can not get data', msgError: true}});
-        }
-      })
-    )
-  },
-
-  templateUpdate: async (data, id) => {
-    const res = await (fetch('/template/update/' + id, {
+  invitationUpdate: async (data, id) => {
+    console.log(id)
+    const res = await (fetch('/invitation/update/' + id, {
       method: 'put',
-      body: (data)
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json'
+      }
     }))
 
     if (res.status !== 401) {
@@ -52,9 +47,9 @@ export default {
     }
   },
 
-  templateDelete: (id) => {
+  invitationDelete: (id) => {
     return (
-      fetch('/template/delete/' + id, {method: 'delete'})
+      fetch('/invitation/delete/' + id, {method: 'delete'})
       .then(response => {
         if(response.status !== 401) {
           return (response.json('Delete data of id: ' + id)
