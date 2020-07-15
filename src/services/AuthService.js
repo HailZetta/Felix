@@ -1,34 +1,34 @@
 export default {
-    login : user =>{
-        return fetch('/users/login',{
-            method : "post",
-            body : JSON.stringify(user),
-            headers : {
-                'Content-Type' : 'application/json'
+    login : async user =>{
+        const res = await fetch('/users/login', {
+            method: "post",
+            body: JSON.stringify(user),
+            headers: {
+                'Content-Type': 'application/json'
             }
-        }).then(res => {
-            if(res.status !== 401)
-                return res.json().then(data => data);
-            else
-                return { isAuthenticated : false, user : {email : "", role : ""}, message: {vi: "Sai email hoặc mật khẩu", en: "Incorrect Email or Password" }};
-        })
+        });
+        if (res.status !== 401)
+            return res.json().then(data => data);
+        else
+            return { isAuthenticated: false, user: { email: "", role: "" }, message: { vi: "Sai email hoặc mật khẩu", en: "Incorrect Email or Password" } };
     },
 
-    register : user =>{
-        return fetch('/users/register',{
-            method : "post",
-            body : JSON.stringify(user),
-            headers : {
-                'Content-Type' : 'application/json'
+    register : async user =>{
+        const res = await fetch('/users/register', {
+            method: "post",
+            body: JSON.stringify(user),
+            headers: {
+                'Content-Type': 'application/json'
             }
-        }).then(res => res.json())
-          .then(data => data);
+        });
+        const data = await res.json();
+        return data;
     },
 
-    logout : ()=>{
-        return fetch('/users/logout')
-                .then(res => res.json())
-                .then(data => data);
+    logout : async ()=>{
+        const res = await fetch('/users/logout');
+        const data = await res.json();
+        return data;
     },
     
     isAuthenticated : ()=>{

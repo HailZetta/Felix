@@ -31,10 +31,10 @@ export default {
 
   guestDelete: (id) => {
     return (
-      fetch('/guestlist/delete/' + id, {method: 'delete'})
+      fetch(`/guestlist/delete/${id}`, {method: 'delete'})
       .then(response => {
         if(response.status !== 401) {
-          return (response.json('Delete data of id: ' + id).then(data => data));
+          return (response.json(`Delete data of id: ${id}`).then(data => data));
         } else {
           return ({message: {msgBody: 'Can not delete data', msgError: true}});
         }

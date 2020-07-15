@@ -28,10 +28,10 @@ export default {
 
   templateListId: (id) => {
     return (
-      fetch('/template/list/' + id)
+      fetch(`/template/list/${id}`)
       .then(response => {
         if(response.status !== 401) {
-          return (response.json('Get data of id: ' + id).then(data => data));
+          return (response.json(`Get data of id: ${id}`).then(data => data));
         } else {
           return ({message: {msgBody: 'Can not get data', msgError: true}});
         }
@@ -40,7 +40,7 @@ export default {
   },
 
   templateUpdate: async (data, id) => {
-    const res = await (fetch('/template/update/' + id, {
+    const res = await (fetch(`/template/update/${id}`, {
       method: 'put',
       body: (data)
     }))
@@ -54,10 +54,10 @@ export default {
 
   templateDelete: (id) => {
     return (
-      fetch('/template/delete/' + id, {method: 'delete'})
+      fetch(`/template/delete/${id}`, {method: 'delete'})
       .then(response => {
         if(response.status !== 401) {
-          return (response.json('Delete data of id: ' + id)
+          return (response.json(`Delete data of id: ${id}`)
           .then(data => data));
         } else {
           return ({message: {msgBody: 'Can not delete data', msgError: true}});

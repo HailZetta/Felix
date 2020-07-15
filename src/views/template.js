@@ -1,12 +1,14 @@
 import React, { Suspense, useContext, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import TemplateService from '../services/TemplateService';
-import { Typography, Row, Col } from 'antd';
+import { Typography, Row, Col, Button } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import LayoutWrap from '../components/layout';
 
-const { Text, Link } = Typography;
+const { Text } = Typography;
 
 const Template = ({match, location}) => {
   const {isAuthenticated} = useContext(AuthContext);
@@ -71,7 +73,10 @@ const Template = ({match, location}) => {
                         <h3>{t('lang') === 'en' ? `Template: ${templateInfo.name_en}` : `Mẫu thiệp: ${templateInfo.name}`}</h3>
                       </Col>
                       <Col>
-                        <span className='uppercase text-golden bold'>{templateInfo.status === 'premium' ? 'Premium' : null}</span>
+                        <span className='uppercase text-golden bold px-20'>{templateInfo.status === 'premium' ? 'Premium' : null}</span>
+                        <Link to='/create-invitation'>
+                          <Button type='primary' className='button'><PlusOutlined />{t('lang') === 'en' ? 'Create New Invitation' : 'Tạo thiệp'}</Button>
+                        </Link>
                       </Col>
                     </Row>
                     <Suspense fallback={<div>Loading...</div>}>

@@ -32,7 +32,7 @@ export default {
 
   invitationUpdate: async (data, id) => {
     console.log(id)
-    const res = await (fetch('/invitation/update/' + id, {
+    const res = await (fetch(`/invitation/update/${id}`, {
       method: 'put',
       body: JSON.stringify(data),
       headers: {
@@ -49,7 +49,7 @@ export default {
 
   invitationDelete: (id) => {
     return (
-      fetch('/invitation/delete/' + id, {method: 'delete'})
+      fetch(`/invitation/delete/${id}`, {method: 'delete'})
       .then(response => {
         if(response.status !== 401) {
           return (response.json('Delete data of id: ' + id)

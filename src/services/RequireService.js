@@ -30,10 +30,10 @@ export default {
 
   requireListId: (id) => {
     return (
-      fetch('/require/list/' + id)
+      fetch(`/require/list/${id}`)
       .then(response => {
         if(response.status !== 401) {
-          return (response.json('Get data of id: ' + id)
+          return (response.json(`Get data of id: ${id}`)
           .then(data => data));
         } else {
           return ({message: {msgBody: 'Can not get data', msgError: true}});
