@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Row, Col, Button, Avatar, Typography, Dropdown } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import Texty from 'rc-texty';
 import 'rc-texty/assets/index.css';
 import { AuthContext } from '../context/AuthContext';
 import '../css/style.css';
@@ -22,7 +21,6 @@ const changeLanguage = (lng) => {
 
 const Topbar = () => {
   let [profile, setProfile] = useState();
-  let [show, setShow] = useState(false);
   const {isAuthenticated, user, setIsAuthenticated, setUser} = useContext(AuthContext);
   const { t } = useTranslation();
 
@@ -33,14 +31,6 @@ const Topbar = () => {
         setIsAuthenticated(false);
       }
     });
-  }
-
-  const mouseDown = () => {
-    setShow(true);
-  }
-
-  const mouseLeave = () => {
-    setShow(false);
   }
 
   useEffect(() => {
@@ -90,11 +80,11 @@ const Topbar = () => {
   const topbarButton = () => {
     return (
       <Row justify='end' align='middle'>
-        <Col className='px-20 language-button'>
+        {/* <Col className='px-20 language-button'>
           <Text type='secondary' onClick={() => changeLanguage('vi')} className='pointer' strong='true'>VI</Text>
           <Text type='secondary' strong='true'> / </Text>
           <Text type='secondary' onClick={() => changeLanguage('en')} className='pointer' strong='true'>EN</Text>
-        </Col>
+        </Col> */}
         <Col className='px-20'>
           {isAuthenticated ?
             <Dropdown overlay={profileDropdown()} placement='bottomRight'>
@@ -104,12 +94,12 @@ const Topbar = () => {
             <div>
               <Link to='/register'>
                 <Button type='text'>
-                  <Text strong='true'>{t('register')}</Text>
+                  <Text className='changeText' strong='true'>{t('register')}</Text>
                 </Button>
               </Link>
               <Link to='/login'>
                 <Button type='text'>
-                  <Text strong='true'>{t('login')}</Text>
+                  <Text className='changeText' strong='true'>{t('login')}</Text>
                 </Button>
               </Link>
             </div>
@@ -122,15 +112,11 @@ const Topbar = () => {
   const topbarLogo = () => {
     return (
       <Row align='middle'>
-        <Col className='bg-grey' onMouseOver={mouseDown} onMouseLeave={mouseLeave}>
-          <Link to='/'>
-            <img className='p-10 pt-20 w-60 z-index-1' src={logo} />
-          </Link>
-        </Col>
         <Col>
-          <Texty type='right' mode='sync' duration={400} className='pl-10 topbar-brand text-grey'>
-            {show && 'Felix'}
-          </Texty>
+          <Link to='/' className='topbar-brand changeText'>
+            {/* <img className='p-10 pt-20 w-60 z-index-1' src={logo} /> */}
+            Felix
+          </Link>
         </Col>
       </Row>
       
@@ -138,21 +124,19 @@ const Topbar = () => {
   }
 
   return (
-    <Row justify='space-between' align='middle' className='container'>
-      <Col>
-        {topbarLogo()}
-      </Col>
-      <Col>
-        <Row align='middle'>
-          <Col>
-            <Navbar />
-          </Col>
-          <Col>
-            {topbarButton()}
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <div id='topbar-wrap'>
+      <Row justify='space-between' align='middle' id='topbar' className='mt-20'>
+        <Col md={6}>
+          <Navbar />
+        </Col>
+        <Col>
+          {topbarLogo()}
+        </Col>
+        <Col md={6}>
+          {topbarButton()}
+        </Col>
+      </Row>
+    </div>
   )
 }
 

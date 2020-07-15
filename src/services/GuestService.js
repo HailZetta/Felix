@@ -8,7 +8,6 @@ export default {
       }
     }))
     .then(data => data)
-    console.log(JSON.stringify(data))
     if (res.status !== 401) {
       return (res.json().then(data => data))
     } else {
@@ -25,6 +24,19 @@ export default {
           .then(data => data));
         } else {
           return ({message: {msgBody: "Can not get data",msgError: true}});
+        }
+      })
+    )
+  },
+
+  guestDelete: (id) => {
+    return (
+      fetch('/guestlist/delete/' + id, {method: 'delete'})
+      .then(response => {
+        if(response.status !== 401) {
+          return (response.json('Delete data of id: ' + id).then(data => data));
+        } else {
+          return ({message: {msgBody: 'Can not delete data', msgError: true}});
         }
       })
     )

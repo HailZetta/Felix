@@ -1,73 +1,57 @@
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Row, Col, Input, Form, Button, Typography } from 'antd';
-import ProfileService from '../services/ProfileService';
-import '../css/style.css';
-import Topbar from '../components/topbar';
+import React from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LayoutWrap from '../components/layout';
+import { Layout, Menu, Row, Col } from 'antd';
+import { SketchOutlined, UsergroupAddOutlined, SettingOutlined } from '@ant-design/icons';
 
-const { Text } = Typography;
+const { Sider, Content } = Layout;
 
 const Profile = () => {
-  let [profile, setProfile] = useState({fullname: '', tel: '', city: ''});
-
   const { t } = useTranslation();
-
-  const registerFunc = (e) => {
-    e.preventDefault();
-    ProfileService.profileCreate(profile)
-  };
-
-  const registerForm = () => {
+  const SiderArea = () => {
     return (
-      <div>
-        <Row justify='center' className='container'>
-          <Col xs={24} md={7}>
-            <Form title={t('login')} layout='vertical'>
-              <Form.Item>
-                <Input size='large' placeholder={t('name')} value={profile.fullname} type='text' className='form-input' onChange={e => setProfile({
-                  ...profile,
-                  fullname: e.target.value,
-                })} />
-              </Form.Item>
-              <Form.Item>
-                <Input size='large' placeholder={t('tel')} value={profile.tel} type='tel' className='form-input' onChange={e => setProfile({
-                  ...profile,
-                  tel: e.target.value,
-                })} />
-              </Form.Item>
-              <Form.Item>
-                <Input size='large' placeholder={t('city')} value={profile.city} type='text' className='form-input' onChange={e => setProfile({
-                  ...profile,
-                  city: e.target.value,
-                })} />
-              </Form.Item>
-              
-              <Form.Item>
-                <Button size='large' type='primary' onClick={registerFunc} block={true} className='text-button button'>{t('login')}</Button>
-              </Form.Item>
-            </Form>
-            <h3>
-              <Text type='secondary'>{t('lang') === 'en' ? 'Already has an account? ' : 'Bạn đã có tài khoản? '}</Text>
-              <Link to='/login'>
-                <Text type='secondary' underline={true}>{t('login')}</Text>
-              </Link>
-            </h3>
-          </Col>
-        </Row>
-      </div>
+      <Menu className='pt-20'>
+        <Menu.Item key='invitation'>
+          <Link to='/invitation'>
+            <h3 strong><SketchOutlined className='text-15' />{t('lang') === 'en' ? 'Invitation' : 'Thiệp mời'}</h3>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key='guestlist'>
+          <Link to='/guestlist'>
+            <h3 strong><UsergroupAddOutlined className='text-15' />{t('lang') === 'en' ? 'Guest List' : 'Khách mời'}</h3>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key='profile'>
+          <Link to='/profile'>
+            <h3 strong><SettingOutlined className='text-15' />{t('lang') === 'en' ? 'Account' : 'Tài khoản'}</h3>
+          </Link>
+        </Menu.Item>
+      </Menu>
     )
   }
-  
-  return (
-    <div>
-      <Topbar />
+
+  const ContentArea = () => {
+    return (
       <Row justify='center' className='p-20'>
-        <Col span={24}>
-          {registerForm()}
-        </Col>
+        <Col>Content</Col>
       </Row>
-    </div>
+    )
+  }
+
+  const DashboardContent = () => {
+    return (
+      <Layout className='p-20'>
+        <Sider>{SiderArea()}</Sider>
+        <Content className='pt-50'>{ContentArea()}</Content>
+      </Layout>
+    )
+  }
+
+  return (
+    <LayoutWrap>
+      {DashboardContent()}
+    </LayoutWrap>
   )
 }
 

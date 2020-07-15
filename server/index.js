@@ -30,6 +30,7 @@ const InvitationRouter = require('./routes/invitation');
 const ContentRouter = require('./routes/content');
 const GuestlistRouter = require('./routes/guestlist');
 const TemplateRouter = require('./routes/template');
+const RequireRouter = require('./routes/require');
 
 app.use('/users', UserRouter);
 app.use('/type', TypeRouter);
@@ -38,6 +39,7 @@ app.use('/invitation', InvitationRouter);
 app.use('/content', ContentRouter);
 app.use('/guestlist', GuestlistRouter);
 app.use('/template', TemplateRouter);
+app.use('/require', RequireRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

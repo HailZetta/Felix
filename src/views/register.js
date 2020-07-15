@@ -5,6 +5,7 @@ import AuthService from '../services/AuthService';
 import '../css/style.css';
 import Topbar from '../components/topbar';
 import { Link } from 'react-router-dom';
+import LayoutWrap from '../components/layout';
 
 const { Text } = Typography;
 
@@ -83,14 +84,13 @@ const Register = (props) => {
   }
   
   return (
-    <div>
-      <Topbar />
-      <Row justify='center' className='p-20'>
+    <LayoutWrap>
+      <Row justify='center' align='middle' className='p-20 h-70vh'>
         <Col span={24}>
           {registerForm()}
         </Col>
       </Row>
-    </div>
+    </LayoutWrap>
   )
 }
 

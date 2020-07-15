@@ -2,7 +2,9 @@ import React, { Suspense, useContext, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import TemplateService from '../services/TemplateService';
-import { Typography } from 'antd';
+import { Typography, Row, Col } from 'antd';
+import moment from 'moment';
+import LayoutWrap from '../components/layout';
 
 const { Text, Link } = Typography;
 
@@ -24,12 +26,18 @@ const Template = ({match, location}) => {
       let props = {}
       
       for (let i in templateInfo.content) {
-        props[templateInfo.content[i].variable] = '.......................'
+        if (templateInfo.content[i].type === 'Date') {
+          props[templateInfo.content[i].variable] = moment(12/12/2012);
+        } else if (templateInfo.content[i].type === 'Time') {
+          props[templateInfo.content[i].variable] = moment('12:12:12');
+        } else {
+          props[templateInfo.content[i].variable] = '.......................';
+        }
       }
 
       if (templateInfo.status === 'private' && !isAuthenticated) {
         return (
-          <div>
+          <div className='container pt-50'>
             {t('lang') === 'en' ?
               <div>
                 <h2>Private Template</h2>
@@ -54,9 +62,25 @@ const Template = ({match, location}) => {
       } else {
         return (
           <div className='container'>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Content {...props} />
-            </Suspense>
+            <Row justify='center'>
+              <Col span={24}>
+                <Row justify='center'>
+                  <Col className='bg-white p-20' style={{border: '1px rgba(0, 0, 0, 0.1) solid'}}>
+                    <Row justify='space-between'>
+                      <Col>
+                        <h3>{t('lang') === 'en' ? `Template: ${templateInfo.name_en}` : `Mẫu thiệp: ${templateInfo.name}`}</h3>
+                      </Col>
+                      <Col>
+                        <span className='uppercase text-golden bold'>{templateInfo.status === 'premium' ? 'Premium' : null}</span>
+                      </Col>
+                    </Row>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Content {...props} />
+                    </Suspense>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           </div>
         )
       }
@@ -64,9 +88,11 @@ const Template = ({match, location}) => {
   }
 
   return (
-    <div>
-      {getTemplate()}
-    </div>
+    <LayoutWrap>
+      <div className='pt-50'>
+        {getTemplate()}
+      </div>
+    </LayoutWrap>
   )
 };
 

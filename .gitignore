@@ -6,7 +6,6 @@ server/node_modules
 src/views/templates
 /.pnp
 .pnp.js
-
 # testing
 /coverage
 

@@ -1,7 +1,7 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import TypeService from '../services/TypeService';
-import { Row, Col, Button, Typography, Divider, Form, Input, TimePicker, DatePicker, Anchor, Space, Table } from 'antd';
+import { Row, Col, Button, Typography, Divider, Form, Input, TimePicker, DatePicker, Anchor, Space, Table, Alert } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import TemplateService from '../services/TemplateService';
 import CardContent from '../components/card';
@@ -9,22 +9,24 @@ import premiumIcon from '../assets/premium-icon.png';
 import LayoutWrap from '../components/layout';
 import ModalTemp from '../components/modal';
 import InvitationService from '../services/InvitationService';
-import EditableTable from '../components/test';
 import GuestService from '../services/GuestService';
 
 const { Text } = Typography;
 const { Link } = Anchor;
-
-const EditableContext = React.createContext();
 
 const CreateInvitation = () => {
   let [typeData, setTypeData] = useState();
   let [idData, setIdData] = useState();
   let [templateData, setTemplateData] = useState();
   let [template, setTemplate] = useState();
+
   let [guestData, setGuestData] = useState();
+  let [guestItem, setGuestItem] = useState([]);
+
   let [invitation, setInvitation] = useState({type: '', template: '', content: '', guestlist: [], status: ''});
   let [visible, setVisible] = useState(false);
+  let [visible2, setVisible2] = useState(false);
+  let [message, setMessage] = useState();
   const { t } = useTranslation();
 
   const PreviewContent = React.lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index'));
@@ -54,16 +56,12 @@ const CreateInvitation = () => {
   }
 
   const createInvitation = () => {
-    console.log(invitation);
     InvitationService.invitationCreate(invitation);
+    // window.location = '';
   }
 
   const previewInvitation = () => {
     setVisible(true);
-  }
-
-  const handleCancel = () => {
-    setVisible(false);
   }
 
   const typeList = () => {
@@ -207,6 +205,9 @@ const CreateInvitation = () => {
 
   const previewModal = () => {
     const style = { top: 20 };
+    const handleCancel = () => {
+      setVisible(false);
+    };
 
     if (template) {
       return (
@@ -228,77 +229,177 @@ const CreateInvitation = () => {
   }
 
   const guestList = () => {
-    const EditableRow = ({ index, ...props }) => {
-      const [form] = Form.useForm();
-      return (
-        <Form form={form} component={false}>
-          <EditableContext.Provider value={form}>
-            <tr {...props} />
-          </EditableContext.Provider>
-        </Form>
-      );
-    };
-
-    const components = {
-      body: {
-        row: EditableRow,
-        // cell: EditableCell,
-      },
-    };
-
     const columns = t('lang') === 'en' ? [
       {title: 'No', dataIndex: 'no'},
       {title: 'Guest', dataIndex: 'fullname'},
-      {title: 'Display Name (Option)', dataIndex: 'displayname'},
+      {title: 'Display Name (Optional)', dataIndex: 'displayname'},
       {title: 'Tel', dataIndex: 'tel'},
-      {title: 'Email', dataIndex: 'email'}
+      {title: 'Email', dataIndex: 'email'},
+      {title: 'Option', render: (record) => {
+        return (
+          <Space size='middle'>
+            <Button type='dashed' onClick={() => handleDelete(record._id)}>Delete</Button>
+          </Space>
+        )
+      }}
     ] : [
       {title: 'STT', dataIndex: 'no'},
       {title: 'Khách mời', dataIndex: 'fullname'},
       {title: 'Tên hiển thị (tùy chọn)', dataIndex: 'displayname'},
       {title: 'Điện thoại', dataIndex: 'tel'},
-      {title: 'Email', dataIndex: 'email'}
-    ]
+      {title: 'Email', dataIndex: 'email'},
+      {title: 'Tùy chỉnh', render: (record) => (
+        <Space size='middle'>
+          <Button type='dashed' onClick={() => handleDelete(record._id)}>Xóa</Button>
+        </Space>
+      )}
+    ];
 
-    // if (invitation.content) {
+    const columns2 = t('lang') === 'en' ? [
+      {title: 'No', dataIndex: 'no'},
+      {title: 'Guest', dataIndex: 'fullname'},
+      {title: 'Display Name (Optional)', dataIndex: 'displayname'},
+      {title: 'Tel', dataIndex: 'tel'},
+      {title: 'Email', dataIndex: 'email'},
+    ] : [
+      {title: 'STT', dataIndex: 'no'},
+      {title: 'Khách mời', dataIndex: 'fullname'},
+      {title: 'Tên hiển thị (tùy chọn)', dataIndex: 'displayname'},
+      {title: 'Điện thoại', dataIndex: 'tel'},
+      {title: 'Email', dataIndex: 'email'},
+    ];
+
+    const formData = t('lang') === 'en' ? [
+      {placeholder: 'Guest name', prop: 'fullname'},
+      {placeholder: 'Display name', prop: 'displayname'},
+      {placeholder: 'Tel', prop: 'tel'},
+      {placeholder: 'Email', prop: 'email'},
+    ] : [
+      {placeholder: 'Tên khách mời', prop: 'fullname'},
+      {placeholder: 'Tên hiển thị', prop: 'displayname'},
+      {placeholder: 'Điện thoại', prop: 'tel'},
+      {placeholder: 'Email', prop: 'email'},
+    ];
+
+    const handleDelete = (id) => {
+      const newData = [...invitation.guestlist];
+      setInvitation({
+        ...invitation,
+        guestlist: newData.filter(item => item._id !== id)
+      });
+    }
+
+    const handleAdd = () => {
+      GuestService.guestCreate(guestItem).then(data => setInvitation({
+        ...invitation,
+        guestlist: [...invitation.guestlist, data]
+      }));
+    }
+
+    const handleCancel = () => {
+      setVisible2(false);
+    }
+
+    const handleOk = () => {
+      setInvitation({
+        ...invitation,
+        guestlist: invitation.guestlist.concat(guestItem)
+      })
+      setVisible2(false);
+    }
+
+    const processData = (data) => {
+      const newData = data ? data.map((item, index) => {
+        return {
+          ...item,
+          no: index + 1,
+        }
+      }) : null;
+      return newData;
+    }
+
+    const SavedGuest = () => {
+      return (
+        <ModalTemp
+          visible={visible2}
+          handleCancel={handleCancel}
+          handleOk={handleOk}
+        >
+          <Table
+            rowKey='_id'
+            rowSelection={{
+              type: 'checkbox',
+              onChange: (selectedRowKeys, selectedRows) => {
+                setGuestItem(selectedRows)
+              }
+            }}
+            columns={columns2}
+            dataSource={processData(guestData)}
+            bordered
+          />
+        </ModalTemp>
+      )
+    }
+
+    if (invitation.content) {
       return (
         <div className='container'>
           <Divider />
           <h1 className='text-center' id='contentList'>
-            {t('lang') === 'en' ? 'Add List' : 'Danh sách khách mời'}
+            {t('lang') === 'en' ? 'Guest List' : 'Danh sách khách mời'}
           </h1>
-          <Button type='primary'> {/* onClick={handleAdd} */}
-            {t('lang') === 'en' ? 'Add a row' : 'Thêm khách mời'}
-          </Button>
-          <Table
-            components={components}
-            dataSource={guestData}
-            columns={columns}
-            className='pt-20'
-            bordered
-          />
-          <Row justify='center' className='pt-20'>
+          <Row justify='center'>
             <Col>
-              <Button type='primary' onClick={() => createInvitation()}>
-                {t('save')}
-              </Button>
+              {message ? <Alert message={t('lang') === 'en' ? message.en : message.vi} type="error" showIcon={true} className='message' /> : null}
             </Col>
           </Row>
+          <Row justify='center' className='pt-20'>
+            <Col>
+              <Form layout='inline'>
+                <Form.Item>
+                  <Button type='primary' onClick={() => setVisible2(true)}>{t('lang') === 'en' ? 'Add saved guest' : 'Thêm khách đã lưu'}</Button>
+                </Form.Item>
+                {formData.map((item, index) => (
+                  <Form.Item key={index}>
+                    <Input placeholder={item.placeholder} onChange={e => setGuestItem({
+                      ...guestItem,
+                      [item.prop]: e.target.value
+                    })} />
+                  </Form.Item>
+                ))}
+                <Form.Item>
+                  <Button type='primary' onClick={handleAdd}>{t('lang') === 'en' ? 'Add guest' : 'Thêm khách'}</Button>
+                </Form.Item>
+              </Form>
+            </Col>
+          </Row>
+          <Table
+            rowKey='_id'
+            columns={columns}
+            dataSource={processData(invitation.guestlist)}
+            bordered
+            className='pt-20'
+          />
+          {SavedGuest()}
         </div>
       )
-    // }
+    }
   }
-  
+
   return (
     <LayoutWrap>
-      <div className='container'>
-        <EditableTable />
-      </div>
       {typeList()}
       {templateList()}
       {contentList()}
       {previewModal()}
       {guestList()}
+      <Row justify='center' className='pt-20'>
+        <Col>
+          <Button type='primary' onClick={() => createInvitation()}>
+            {t('save')}
+          </Button>
+        </Col>
+      </Row>
     </LayoutWrap>
   )
 }

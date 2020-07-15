@@ -1,40 +1,69 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import { AuthContext } from '../context/AuthContext';
+import LayoutWrap from '../components/layout';
+import TypeService from '../services/TypeService';
 import TemplateService from '../services/TemplateService';
-import { Typography, Row, Col } from 'antd';
-import { EditOutlined } from '@ant-design/icons';
-import Topbar from '../components/topbar';
-import CardContent from '../components/card';
+import { useTranslation } from 'react-i18next';
+import logo from '../assets/logo-color.png';
 import premiumIcon from '../assets/premium-icon.png';
+import { Card, Row, Col, Button, Carousel } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 
-const { Text } = Typography;
+const { Meta } = Card;
 
-const Library = () => {
-  const {isAuthenticated} = useContext(AuthContext);
-  let [templateList, setTemplateList] = useState();
-
+const Library = ({match, location}) => {
+  let [typeData, setTypeData] = useState();
+  let [templateData, setTemplateData] = useState();
   const { t } = useTranslation();
+  const {params: { type_en }} = match;
+  const typeEn = type_en.replace('-', '%20');
+  if (typeEn) {
+    TypeService.typeListName(typeEn).then(data => setTypeData(data));
+  }
 
   useEffect(() => {
-    TemplateService.templateList().then(data => setTemplateList(data));
+    TemplateService.templateList().then(data => setTemplateData(data));
   }, []);
 
-  const listTemplate = () => {
-    if (templateList) {
+  const Banner = () => {
+    const { t } = useTranslation();
+    if (typeData) {
       return (
-        <Row justify='center' gutter={[20, 20]} className='px-60 py-20'>
-          {templateList.map((item, index) => {
-            let thumbnail = require(item.templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
-            return (
-              <Col xs={24} sm={12} md={8} lg={6} key={index}>
-                <Link to={'/template/' + `${item._id}`}>
-                  <CardContent
-                    hoverable={true}
-                    cover={
+        <div className='container'>
+          <Row justify='center' align='middle' className='pt-50'>
+            <Col xs={22} md={10}>
+              <Carousel autoplay>
+                <div className='bg-pink text-white text-center line-h-300'>1</div>
+                <div className='bg-pink text-white text-center line-h-300'>2</div>
+                <div className='bg-pink text-white text-center line-h-300'>3</div>
+              </Carousel>
+            </Col>
+            <Col xs={22} md={10} className='p-20'>
+              <h1 className='text-banner'>{t('lang') === 'en' ? typeData.type_en : typeData.type}</h1>
+              <h3 >{t('lang') === 'en' ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}</h3>
+              <Link to='/create-invitation'>
+                <Button type='primary' className='button mt-20'><PlusOutlined />{t('lang') === 'en' ? 'Create New Invitation' : 'Tạo thiệp'}</Button>
+              </Link>
+            </Col>
+          </Row>
+        </div>
+      )
+    }
+  }
+
+  const GetType = () => {
+    if (typeData && typeData.template) {
+      return (
+        <Row justify='center' className='pt-50'>
+          {typeData.template.map((item, index) => {
+            for (let i in templateData) {
+              if (templateData[i]._id === item) {
+                const thumbnail = require(templateData[i].templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
+                return (
+                  <Col xs={24} sm={12} md={8} lg={6} className='p-20' key={index}>
+                    <Card hoverable cover={
                       <>
-                        {item.status === 'premium' ?
+                        {templateData[i].status === 'premium' ?
                           <Row justify='end' className='position-absolute'>
                             <Col>
                               <img src={premiumIcon} alt='' className='w-45 m-5 p-5 bg-grey-transparent' />
@@ -43,37 +72,85 @@ const Library = () => {
                         :
                           null
                         }
-                        <img src={thumbnail} alt='' />
+                        <img src={thumbnail} />
                       </>
-                    }
-                    bordered={true}
-                    description={
-                      <Row justify='space-between'>
-                        <Col>
-                          <EditOutlined key="name" className='pr-10'/>
-                          <Text>{t('lang') === 'en' ? item.name_en : item.name}</Text>
-                        </Col>
-                        <Col>
-                          <Text strong='true'>{item.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} VNĐ</Text>
-                        </Col>
-                      </Row>
-                    }
-                  />
-                </Link>
-              </Col>
-            )
+                    }>
+                      <Meta
+                        title={
+                          <Row justify='space-between' align='middle'>
+                            <Col>
+                              <Link to={`/template/` + item}>
+                                <Row gutter={10} align='middle'>
+                                  <Col>
+                                    <img src={logo} className='w-20' />
+                                  </Col>
+                                  <Col>
+                                    <span className='text-black'>{t('lang') === 'en' ? templateData[i].name_en : templateData[i].name}</span>
+                                  </Col>
+                                </Row>
+                              </Link>
+                            </Col>
+                            <Col>
+                              {templateData[i].status === 'premium' ?
+                                <span className='uppercase text-golden bold'>Premium</span>
+                              : null}
+                            </Col>
+                          </Row>
+                        }
+                      />
+                    </Card>
+                  </Col>
+                )
+              }
+            }
           })}
         </Row>
       )
     }
   }
 
-  return (
-    <div>
-      <Topbar />
-      {listTemplate()}
-    </div>
+  const FooterSection = () => {
+    useEffect(() => {
+      document.addEventListener('scroll', () => {
+        if (document.getElementById('footer')) {
+          const footer = document.getElementById('footer').offsetTop;
+          const scrollCheck = window.scrollY > footer;
+          if (scrollCheck) {
+            for (let i = 0; i < document.getElementsByClassName('changeText').length; i++) {
+              document.getElementsByClassName('changeText')[i].style.color = '#fff';
+            }
+          } else {
+            for (let i = 0; i < document.getElementsByClassName('changeText').length; i++) {
+              document.getElementsByClassName('changeText')[i].style.color = '#000';
+            }
+          }
+        }
+      })
+    });
+
+    return (
+      <div className='bg-black' id='footer'>
+        <div className='container'>
+          <Row justify='center' align='middle' className='h-100vh'>
+            <Col>
+              <a href='/create-invitation'>
+                <h1 className='text-white pointer highlight'>Get Started!</h1>
+              </a>
+            </Col>
+          </Row>
+          <h4 className='text-white text-center m-0 pb-20'>&copy; Felix Studio</h4>
+        </div>
+      </div>
+    )
+  }
+  
+  return(
+    <LayoutWrap>
+      {Banner()}
+      {GetType()}
+      {FooterSection()}
+    </LayoutWrap>
   )
-};
+}
 
 export default Library;

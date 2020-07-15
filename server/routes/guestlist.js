@@ -26,7 +26,7 @@ router.post('/create', passport.authenticate('jwt', {session : false}), (req, re
         .then(data => {
           data.guestlist.push(newGuest);
           data.save();
-          res.json(data);
+          res.json(newGuest);
         })
         .catch(err => console.log(err));
       }

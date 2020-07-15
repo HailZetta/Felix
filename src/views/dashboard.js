@@ -1,131 +1,74 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useState, useContext } from 'react';
 import LayoutWrap from '../components/layout';
-import dashboardBanner from '../assets/dashboard-banner.jpg';
-import { AuthContext } from '../context/AuthContext';
+import { Layout, Menu, Typography, Row, Col, Statistic } from 'antd';
+import { SketchOutlined, UsergroupAddOutlined, SettingOutlined } from '@ant-design/icons';
 import CarouselTemp from '../components/carousel';
-import { Row, Col, Button, Typography, Divider, Carousel } from 'antd';
-import { PlusOutlined, EditOutlined } from '@ant-design/icons';
-import TypeService from '../services/TypeService';
-import TemplateService from '../services/TemplateService';
-import CardContent from '../components/card';
-import premiumIcon from '../assets/premium-icon.png';
+import dashboardBanner from '../assets/dashboard-banner.jpg';
+import { useTranslation } from 'react-i18next';
+import ProfileService from '../services/ProfileService';
+import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
+const { Sider, Content } = Layout;
 const { Text } = Typography;
 
 const Dashboard = () => {
-  let {isAuthenticated, user} = useContext(AuthContext);
-  let [typeList, setTypeList] = useState();
-  let [templateList, setTemplateList] = useState();
+  let [profile, setProfile] = useState(null);
+  const {isAuthenticated, user} = useContext(AuthContext);
+
   const { t } = useTranslation();
 
   useEffect(() => {
-    TypeService.typeList().then(data => setTypeList(data));
-    TemplateService.templateList().then(data => setTemplateList(data));
+    ProfileService.profileListId(user ? user.profile : null).then(data => setProfile(data));
   }, []);
 
-  const banner = () => {
+  const siderArea = () => {
     return (
-      <CarouselTemp content={[
-        {image: dashboardBanner}
-      ]} />
+      <Menu className='pt-20'>
+        <Menu.Item key='invitation'>
+          <Link to='/invitation'>
+            <h3 strong><SketchOutlined className='text-15' />{t('lang') === 'en' ? 'Invitation' : 'Thiệp mời'}</h3>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key='guestlist'>
+          <Link to='/guestlist'>
+            <h3 strong><UsergroupAddOutlined className='text-15' />{t('lang') === 'en' ? 'Guest List' : 'Danh sách khách mời'}</h3>
+          </Link>
+        </Menu.Item>
+        <Menu.Item key='profile'>
+          <Link to='/profile'>
+            <h3 strong><SettingOutlined className='text-15' />{t('lang') === 'en' ? 'Account' : 'Tài khoản'}</h3>
+          </Link>
+        </Menu.Item>
+      </Menu>
     )
   }
 
-  const funcButton = () => {
+  const contentArea = () => {
     return (
-      <Row gutter={20} justify={window.innerWidth < 700 ? 'center' : 'end'} className='pt-10'>
-        <Col>
-          <Link to='/create-invitation'>
-            <Button size='large' type='primary' className='text-button button'>
-              <PlusOutlined />
-              {t('create')}
-            </Button>
-          </Link>
+      <Row justify='center' className='p-20'>
+        <Col span={12} className='text-center'>
+          <Statistic title={t('lang') === 'en' ? 'Created Invitation' : 'Số lượng thiệp đã tạo'} value={profile && profile.invitation ? profile.invitation.length : 0} prefix={<SketchOutlined />} />
         </Col>
-        <Col className='create-button'>
-          <Button size='large' type='dashed' className='text-button'>
-            {t('history')}
-          </Button>
+        <Col span={12} className='text-center'>
+          <Statistic title={t('lang') === 'en' ? 'Saved Guest' : 'Khách mời đã lưu'} value={profile && profile.guestlist ? profile.guestlist.length : 0} prefix={<UsergroupAddOutlined /> } />
         </Col>
       </Row>
     )
   }
 
-  const tempList = () => {
-    if (typeList && templateList) {
-      return (
-        <div>
-          {typeList.map((item, index) => (
-            <div key={index}>
-              <Divider orientation='left' className='mt-0'>
-                <h3>{t('lang') === 'en' ? item.type_en : item.type}</h3>
-              </Divider>
-              <Carousel slidesToShow={window.innerWidth < 700 ? 1 : window.innerWidth < 970 ? 2 : 4} autoplay autoplaySpeed={10000} className='pb-30'>
-                {templateList.map((template, index) => {
-                  for (let i in item.template) {
-                    if (item.template[i] === template._id) {
-                      let thumbnail = require(template.templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
-                      return (
-                        <div key={index} className='carousel-slider'>
-                          <Link to={'/template/' + `${template._id}`}>
-                            <CardContent
-                              hoverable={true}
-                              cover={
-                                <>
-                                  {template.status === 'premium' ?
-                                    <Row justify='end' className='position-absolute'>
-                                      <Col>
-                                        <img src={premiumIcon} alt='' className='w-45 m-5 p-5 bg-grey-transparent' />
-                                      </Col>
-                                    </Row>
-                                  :
-                                    null
-                                  }
-                                  <img src={thumbnail} alt='' />
-                                </>
-                              }
-                              bordered={true}
-                              description={
-                                <Row justify='space-between'>
-                                  <Col>
-                                    <EditOutlined key="name" className='pr-10'/>
-                                    <Text>{t('lang') === 'en' ? template.name_en : template.name}</Text>
-                                  </Col>
-                                  <Col>
-                                    <Text strong='true'>{template.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} VNĐ</Text>
-                                  </Col>
-                                </Row>
-                              }
-                            />
-                          </Link>
-                        </div>
-                      )
-                    }
-                  }
-                })}
-              </Carousel>
-            </div>
-          ))}
-        </div>
-      )
-    }
+  const dashboardContent = () => {
+    return (
+      <Layout className='p-20'>
+        <Sider>{siderArea()}</Sider>
+        <Content className='pt-50'>{contentArea()}</Content>
+      </Layout>
+    )
   }
 
   return (
     <LayoutWrap>
-      <div className='container'>
-        {user.role === 'user' ? 
-          <div>
-            {banner()}
-            {funcButton()}
-            {tempList()}
-          </div>
-        :
-          null
-        }
-      </div>
+      {dashboardContent()}
     </LayoutWrap>
   )
 }
