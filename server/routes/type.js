@@ -17,7 +17,7 @@ router.post('/create', passport.authenticate('jwt', {session : false}), (req, re
   }
 });
 
-router.get('/list', passport.authenticate('jwt', {session : false}), (req, res) => {
+router.get('/list', (req, res) => {
   InvitationType.find()
   .then(data => res.json(data))
   .catch(err => console.log(err));
@@ -44,6 +44,12 @@ router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req,
 
 router.get('/list/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
   InvitationType.findById(req.params.id)
+  .then(data => res.json(data))
+  .catch(err => console.log(err));
+});
+
+router.get('/name/:type_en', passport.authenticate('jwt', {session : false}), (req, res) => {
+  InvitationType.findOne({type_en: req.params.type_en})
   .then(data => res.json(data))
   .catch(err => console.log(err));
 });

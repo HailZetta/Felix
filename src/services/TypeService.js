@@ -42,6 +42,20 @@ export default {
     )
   },
 
+  typeListName: (type_en) => {
+    return (
+      fetch('/type/name/' + type_en)
+      .then(response => {
+        if(response.status !== 401) {
+          return (response.json('Get data of id: ' + type_en)
+          .then(data => data));
+        } else {
+          return ({message: {msgBody: 'Can not get data', msgError: true}});
+        }
+      })
+    )
+  },
+
   typeUpdate: async (data, id) => {
     console.log(id)
     const res = await (fetch('/type/update/' + id, {

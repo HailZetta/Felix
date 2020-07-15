@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Row, Col, Input, Form, Button } from 'antd';
 import ProfileService from '../services/ProfileService';
 import '../css/style.css';
+import LayoutWrap from '../components/layout';
 
 const Welcome = () => {
   let [profile, setProfile] = useState({fullname: ''});
@@ -12,7 +13,7 @@ const Welcome = () => {
   const profileFunc = (e) => {
     e.preventDefault();
     ProfileService.profileCreate(profile)
-    window.location = '/dashboard';
+    window.location = '/dashboard/invitation';
   };
 
   const profileForm = () => {
@@ -44,13 +45,13 @@ const Welcome = () => {
   }
   
   return (
-    <div>
-      <Row justify='center' className='p-20'>
+    <LayoutWrap>
+      <Row justify='center' align='middle' className='p-20 section-part'>
         <Col span={24}>
           {profileForm()}
         </Col>
       </Row>
-    </div>
+    </LayoutWrap>
   )
 }
 

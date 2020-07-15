@@ -7,9 +7,9 @@ const { Content } = Layout;
 const LayoutWrap = ({children}) => {
   return (
     <div>
-      <Layout style={{backgroundColor: '#fff'}}>
+      <Layout className='bg-white'>
         <Topbar />
-        <Content>
+        <Content className='pt-70'>
           <Row>
             <Col span={24}>
               {children}
