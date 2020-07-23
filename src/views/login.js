@@ -26,7 +26,6 @@ const Login = (props) => {
       if (isAuthenticated) {
         authContext.setUser(user);
         authContext.setIsAuthenticated(isAuthenticated);
-        console.log(user)
         if (user.profile) {
           props.history.push('/dashboard');
         } else {

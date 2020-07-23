@@ -74,7 +74,7 @@ const Template = ({match, location}) => {
                       </Col>
                       <Col>
                         <span className='uppercase text-golden bold px-20'>{templateInfo.status === 'premium' ? 'Premium' : null}</span>
-                        <Link to='/create-invitation'>
+                        <Link to='/invitation-create'>
                           <Button type='primary' className='button'><PlusOutlined />{t('lang') === 'en' ? 'Create New Invitation' : 'Tạo thiệp'}</Button>
                         </Link>
                       </Col>

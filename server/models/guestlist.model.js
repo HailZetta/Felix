@@ -7,7 +7,6 @@ const GuestListSchema = new Schema({
   displayname: {type: String},
   tel: {type: String},
   email: {type: String},
-  invitation: [{type: Schema.Types.ObjectId, ref: 'invitation'}],
 })
 
 const GuestList = mongoose.model('guestlist', GuestListSchema);

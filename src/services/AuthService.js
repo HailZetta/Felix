@@ -31,15 +31,29 @@ export default {
         return data;
     },
     
-    isAuthenticated : ()=>{
-        return fetch('/users/authenticated')
-        .then(res => {
-            if(res.status !== 401) {
-                return res.json().then(data => data);
-            } else {
-                return { isAuthenticated : false, user : {email : "", role : "", profile: ""}};
+    isAuthenticated : async ()=>{
+        const res = await fetch('/users/authenticated');
+        if (res.status !== 401) {
+            return res.json().then(data => data);
+        }
+        else {
+            return { isAuthenticated: false, user: {_id: "", email: "", role: "", profile: "" } };
+        }
+    },
+
+    updatePassword: async (data, id) => {
+        const res = await (fetch(`/users/update/${id}`, {
+            method: 'put',
+            body: JSON.stringify(data),
+            headers: {
+              'Content-Type': 'application/json'
             }
-        });
-    }
+        }));
+        if (res.status !== 401) {
+            return (res.json().then(data => data))
+        } else {
+            return (res.json({ message: { msgBody: "Error has occured", msgError: true } }))
+        }
+    },
 
 }

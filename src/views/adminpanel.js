@@ -5,6 +5,8 @@ import TypeService from '../services/TypeService';
 import ModalTemp from '../components/modal';
 import { Link } from 'react-router-dom';
 import Topbar from '../components/topbar';
+import InvitationService from '../services/InvitationService';
+import ProfileService from '../services/ProfileService';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -20,10 +22,14 @@ const AdminPanel = () => {
   let [contentData, setContentData] = useState([]);
   let [contentItem, setContentItem] = useState({variable: '', name: '', type: ''});
   let [visible, setVisible] = useState(false);
+  let [invitationList, setInvitationList] = useState([]);
+  let [profileList, setProfileList] = useState([]);
 
   useEffect(() => {
     TemplateService.templateList().then(data => setTemplateData(data));
     TypeService.typeList().then(data => setTypeData(data));
+    InvitationService.invitationList().then(data => setInvitationList(data));
+    ProfileService.profileList().then(data => setProfileList(data));
   }, []);
 
   let newTemplate = new FormData();
@@ -57,6 +63,7 @@ const AdminPanel = () => {
             <Option value='String'>String</Option>
             <Option value='Date'>Date</Option>
             <Option value='Time'>Time</Option>
+            <Option value='Image'>Image</Option>
           </Select>
         </Form.Item>
       </Form>
@@ -164,7 +171,7 @@ const AdminPanel = () => {
             {row.template.map((item, index) => (
               <Row key={index} justify='center'>
                 <Col>
-                  <Link to={'/template/' + `${item}`}>
+                  <Link to={`/template/${item}`}>
                     {item}
                   </Link>
                 </Col>
@@ -219,7 +226,7 @@ const AdminPanel = () => {
     }
 
     const handleOk = () => {
-      contentData.push(contentItem);
+      setContentData(contentData => [...contentData, contentItem]);
       setContentItem({variable: '', name: '', type: ''});
       setVisible(false);
     }
@@ -356,7 +363,7 @@ const AdminPanel = () => {
             TemplateService.templateDelete(row._id);
             window.location = '/admin-panel'
           }}>Xóa thiệp</Button>
-          <Link to={'/template/' + `${row._id}`}>
+          <Link to={`/template/${row._id}`}>
             <Button type='dashed'>Xem thiệp</Button>
           </Link>
         </Space>
@@ -365,11 +372,103 @@ const AdminPanel = () => {
 
     return (
       <div className='container pt-50'>
-        <h2 className='text-center'>Danh sách thiệp</h2>
+        <h2 className='text-center'>Danh sách mẫu thiệp</h2>
         <Table
           rowKey='_id'
           columns={columns}
           dataSource={templateData}
+          bordered
+        />
+      </div>
+    )
+  };
+
+  const InvitationListTable = () => {
+    const handleDelete = (id) => {
+      console.log(id);
+    };
+
+    const handleAccept = (item) => {
+      console.log(item);
+      InvitationService.invitationUpdate({
+        ...item,
+        status: 4,
+      }, item._id)
+      const newInvitationList = invitationList.slice(0);
+      for (let i = 0; i < newInvitationList.length; i++) {
+        if (newInvitationList[i]._id === item._id) {
+          newInvitationList.splice(i, 1, {...item, status: 4})
+        }
+      }
+      setInvitationList(newInvitationList);
+    };
+
+    const columns = [
+      {title: 'STT', dataIndex: 'no', align: 'center'},
+      {title: 'Người tạo', dataIndex: 'createdBy', align: 'center'},
+      {title: 'Loại thiệp', dataIndex: 'typeName', align: 'center'},
+      {title: 'Mẫu thiệp', dataIndex: 'templateName', align: 'center'},
+      {title: 'Số lượng khách mời', dataIndex: 'guestQty', align: 'center'},
+      {title: 'Trạng thái', dataIndex: 'status', align: 'center', render: (record) => (
+        <span>
+          {record === 0 ? ('Chọn mẫu thiệp') :
+          record === 1 ? ('Điền nội dung') :
+          record === 2 ? ('Thêm khách mời') :
+          record === 3 ? ('Thanh toán') :
+          ('Hoàn tất')}
+        </span>
+      )},
+      {title: 'Tùy chọn', align: 'center', render: (record) => (
+        <Space size='middle'>
+          <Button type='dashed' onClick={() => handleDelete(record._id)}>{'Xóa'}</Button>
+          <Button type='dashed' onClick={() => handleAccept(record)}>{'Duyệt'}</Button>
+        </Space>
+      )}
+    ];
+
+    const ProcessData = (data) => {
+      const newData = data.map((item, index) => {
+        let type = {en: null, vi: null};
+        let template = {en: null, vi: null};
+        let createdBy = null;
+        for (let i in typeData) {
+          if (typeData[i]._id === item.type) {
+            type.en = typeData[i].type_en;
+            type.vi = typeData[i].type;
+          }
+        }
+        for (let i in templateData) {
+          if (templateData[i]._id === item.template) {
+            template.en = templateData[i].name_en;
+            template.vi = templateData[i].name;
+          }
+        }
+        for (let i = 0; i < profileList.length; i++) {
+          for (let j = 0; j < profileList[i].invitation.length; j++) {
+            if (profileList[i].invitation[j] === item._id) {
+              createdBy = profileList[i].fullname;
+            }
+          }
+        };
+        return {
+          ...item,
+          no: index + 1,
+          createdBy: createdBy,
+          typeName: type.en,
+          templateName: template.en,
+          guestQty: item.guestlist.length,
+        }
+      })
+      return newData;
+    }
+
+    return (
+      <div className='container p-20'>
+        <h2 className='text-center'>Danh sách thiệp</h2>
+        <Table
+          rowKey='_id'
+          columns={columns}
+          dataSource={ProcessData(invitationList)}
           bordered
         />
       </div>
@@ -379,7 +478,7 @@ const AdminPanel = () => {
   return (
     <div>
       <Topbar />
-      <Row className='container'>
+      <Row className='container pt-50'>
         <h1 className='pt-20 text-rainbow'>Admin Panel</h1>
         <Col span={24}>
           <Tabs defaultActiveKey='1' size='small' type='card'>
@@ -390,6 +489,9 @@ const AdminPanel = () => {
             <TabPane tab='Template' key={2}>
               {templateUpload()}
               {templateDataList()}
+            </TabPane>
+            <TabPane tab='Invitation' key={3}>
+              {InvitationListTable()}
             </TabPane>
           </Tabs>
         </Col>

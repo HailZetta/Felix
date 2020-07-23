@@ -8,7 +8,6 @@ export default {
       }
     }))
     .then(data => data)
-    console.log(JSON.stringify(data))
     if (res.status !== 401) {
       return (res.json().then(data => data))
     } else {
@@ -30,8 +29,20 @@ export default {
     )
   },
 
+  invitationListId: (id) => {
+    return (
+      fetch(`/invitation/list/${id}`)
+      .then(response => {
+        if(response.status !== 401) {
+          return (response.json(`Get data of id: ${id}`).then(data => data));
+        } else {
+          return ({message: {msgBody: 'Can not get data', msgError: true}});
+        }
+      })
+    )
+  },
+
   invitationUpdate: async (data, id) => {
-    console.log(id)
     const res = await (fetch(`/invitation/update/${id}`, {
       method: 'put',
       body: JSON.stringify(data),
@@ -60,4 +71,17 @@ export default {
       })
     )
   },
+
+  invitationUpload: async (data, id) => {
+    const res = await (fetch(`/invitation/upload/${id}`, {
+      method: 'put',
+      body: data
+    }));
+
+    if (res.status !== 401) {
+      return (res.json().then(data => data));
+    } else {
+      return (res.json({ message: { msgBody: "Error has occured", msgError: true } }));
+    };
+  }
 };

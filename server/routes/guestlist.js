@@ -47,7 +47,7 @@ router.get('/list/:id', passport.authenticate('jwt', {session : false}), (req, r
 });
 
 router.delete('/delete/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
-  GuestList.findOneAndDelete(req.params.id, (error, data) => {
+  GuestList.findByIdAndDelete(req.params.id, (error, data) => {
     if (error) {
       return next(error);
     } else {

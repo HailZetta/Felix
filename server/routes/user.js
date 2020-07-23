@@ -59,7 +59,7 @@ router.post('/login', passport.authenticate('local', {session: false}), (req, re
     }, "zetta", {expiresIn: "12h"});
 
     res.cookie('access_token', token, {httpOnly: true, sameSite: true}); 
-    res.status(200).json({isAuthenticated: true, user: {email, role, profile}});
+    res.status(200).json({isAuthenticated: true, user: {_id, email, role, profile}});
   }
 });
 
@@ -69,39 +69,25 @@ router.get('/logout', passport.authenticate('jwt', {session: false}), (req, res)
 });
 
 router.get('/authenticated', passport.authenticate('jwt', {session : false}), (req, res) => {
-  const {email, role, profile} = req.user;
-  res.status(200).json({isAuthenticated : true, user : {email, role, profile}});
+  const {_id, email, role, profile} = req.user;
+  res.status(200).json({isAuthenticated : true, user : {_id, email, role, profile}});
 });
 
 router.put('/update/:id', passport.authenticate('jwt', {session: false}), (req, res, next) => {
   let {password, password2} = req.body;
-  let errors = [];
-
-  if (!password || !password2) {
-    errors.push({message: 'Vui lòng điền các thông tin yêu cầu (*)', message_en: 'Fill in all required infomation'});
-  }
-
-  if (password != password2) {
-    errors.push({message: 'Mật khẩu xác nhận không chính xác', message_en: 'Password is not match'});
-  }
-
-  if (errors.length > 0) {
-    res.status(500).json({message: {massageBody: errors, massageError: true}});
-  } else {
-    bcrypt.hash(password, 10, (err, hashPassword) => {
-      password = hashPassword;
-      const newUser = {
-        password: password,
-      };
-      Users.findByIdAndUpdate(req.params.id, newUser, (error, data) => {
-        if (error) {
-          return next(error);
-        } else {
-          res.json({message: newUser});
-        }
-      });
+  bcrypt.hash(password, 10, (err, hashPassword) => {
+    password = hashPassword;
+    const newUser = {
+      password: password,
+    };
+    Users.findByIdAndUpdate(req.params.id, newUser, (error, data) => {
+      if (error) {
+        return next(error);
+      } else {
+        res.json({message: newUser});
+      }
     });
-  }
+  });
 });
 
 router.get('/list/:id', passport.authenticate('jwt', {session : false}), (req, res) => {

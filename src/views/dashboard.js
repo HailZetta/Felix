@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ProfileService from '../services/ProfileService';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
+import SiderWrap from '../components/sider';
 
 const { Sider, Content } = Layout;
 const { Text } = Typography;
@@ -24,23 +25,7 @@ const Dashboard = () => {
 
   const siderArea = () => {
     return (
-      <Menu className='pt-20'>
-        <Menu.Item key='invitation'>
-          <Link to='/invitation'>
-            <h3 strong><SketchOutlined className='text-15' />{t('lang') === 'en' ? 'Invitation' : 'Thiệp mời'}</h3>
-          </Link>
-        </Menu.Item>
-        <Menu.Item key='guestlist'>
-          <Link to='/guestlist'>
-            <h3 strong><UsergroupAddOutlined className='text-15' />{t('lang') === 'en' ? 'Guest List' : 'Danh sách khách mời'}</h3>
-          </Link>
-        </Menu.Item>
-        <Menu.Item key='profile'>
-          <Link to='/profile'>
-            <h3 strong><SettingOutlined className='text-15' />{t('lang') === 'en' ? 'Account' : 'Tài khoản'}</h3>
-          </Link>
-        </Menu.Item>
-      </Menu>
+      <SiderWrap />
     )
   }
 

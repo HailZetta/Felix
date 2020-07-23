@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import i18n from '../i18n';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Row, Col, Button, Avatar, Typography, Dropdown } from 'antd';
@@ -7,17 +6,12 @@ import { UserOutlined } from '@ant-design/icons';
 import 'rc-texty/assets/index.css';
 import { AuthContext } from '../context/AuthContext';
 import '../css/style.css';
-import logo from '../assets/logo.png';
 import AuthService from '../services/AuthService';
 import ProfileService from '../services/ProfileService';
 import DropdownTemp from './dropdown';
 import Navbar from './navbar';
 
 const { Text } = Typography;
-
-const changeLanguage = (lng) => {
-  i18n.changeLanguage(lng);
-}
 
 const Topbar = () => {
   let [profile, setProfile] = useState();
@@ -34,7 +28,7 @@ const Topbar = () => {
   }
 
   useEffect(() => {
-    ProfileService.profileListId(user ? user.profile : null).then(data => setProfile(data));
+    ProfileService.profileListId(user.profile).then(data => setProfile(data));
   }, []);
 
   const profileDropdown = () => {

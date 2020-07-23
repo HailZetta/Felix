@@ -41,7 +41,7 @@ const Library = ({match, location}) => {
             <Col xs={22} md={10} className='p-20'>
               <h1 className='text-banner'>{t('lang') === 'en' ? typeData.type_en : typeData.type}</h1>
               <h3 >{t('lang') === 'en' ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}</h3>
-              <Link to='/create-invitation'>
+              <Link to='/invitation-create'>
                 <Button type='primary' className='button mt-20'><PlusOutlined />{t('lang') === 'en' ? 'Create New Invitation' : 'Tạo thiệp'}</Button>
               </Link>
             </Col>
@@ -72,7 +72,7 @@ const Library = ({match, location}) => {
                         :
                           null
                         }
-                        <img src={thumbnail} />
+                        <img src={thumbnail} alt='' />
                       </>
                     }>
                       <Meta
@@ -82,7 +82,7 @@ const Library = ({match, location}) => {
                               <Link to={`/template/` + item}>
                                 <Row gutter={10} align='middle'>
                                   <Col>
-                                    <img src={logo} className='w-20' />
+                                    <img src={logo} className='w-20' alt='' />
                                   </Col>
                                   <Col>
                                     <span className='text-black'>{t('lang') === 'en' ? templateData[i].name_en : templateData[i].name}</span>
@@ -133,7 +133,7 @@ const Library = ({match, location}) => {
         <div className='container'>
           <Row justify='center' align='middle' className='h-100vh'>
             <Col>
-              <a href='/create-invitation'>
+              <a href='/invitation-create'>
                 <h1 className='text-white pointer highlight'>Get Started!</h1>
               </a>
             </Col>

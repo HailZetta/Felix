@@ -11,7 +11,7 @@ class CarouselTemp extends Component {
       <Carousel autoplay className='dashboard-carousel'>
         {this.props.content.map((item, index) => (
           <div key={index}>
-            <img src={item.image} />
+            <img src={item.image} alt='' />
           </div>
         ))}
       </Carousel>

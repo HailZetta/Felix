@@ -89,15 +89,20 @@ router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req,
 
 router.delete('/delete/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
   Template.findByIdAndDelete(req.params.id, (err, data) => {
-    fs.readdirSync(data.templateFile).forEach((file, index) => {
-      const curPath = Path.join(data.templateFile, file);
-      if (fs.lstatSync(curPath).isDirectory()) {
-        deleteFolderRecursive(curPath);
-      } else {
-        fs.unlinkSync(curPath);
+    let deleteFolderRecursive = function(path) {
+      if( fs.existsSync(path) ) {
+        console.log(data.templateFile)
+        fs.readdirSync(data.templateFile).forEach((file, index) => {
+          const curPath = Path.join(data.templateFile, file);
+          if (fs.lstatSync(curPath).isDirectory()) {
+            deleteFolderRecursive(curPath);
+          } else {
+            fs.unlinkSync(curPath);
+          }
+        });
+        fs.rmdirSync(data.templateFile);
       }
-    });
-    fs.rmdirSync(data.templateFile);
+    }
   })
   .then(data => res.json(data))
   .catch(err => res.json(err));

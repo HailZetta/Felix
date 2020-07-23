@@ -21,7 +21,7 @@ const Banner = () => {
         <Col xs={22} md={10} className='p-20'>
           <h1 className='text-banner'>{t('lang') === 'en' ? 'Designable Invitation' : 'Designable Invitation'}</h1>
           <h3 >{t('lang') === 'en' ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'}</h3>
-          <Link to='/create-invitation'>
+          <Link to='/invitation-create'>
             <Button type='primary' className='button mt-20'><PlusOutlined />{t('lang') === 'en' ? 'Create New Invitation' : 'Tạo thiệp'}</Button>
           </Link>
         </Col>
@@ -127,7 +127,7 @@ const FooterSection = () => {
       <div className='container'>
         <Row justify='center' align='middle' className='h-100vh'>
           <Col>
-            <a href='/create-invitation'>
+            <a href='/invitation-create'>
               <h1 className='text-white pointer highlight'>Get Started!</h1>
             </a>
           </Col>

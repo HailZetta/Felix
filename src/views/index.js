@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import LayoutWrap from '../components/layout';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +56,7 @@ const Section3 = () => {
       </Col>
       <Col xs={24} md={12} className='p-20 bg-shape'>
         {/* <Animation placement='fadeIn' delay={2500} trigger='scroll'> */}
-          <img src={imageSection1} className='w-100p' />
+          <img src={imageSection1} className='w-100p' alt='' />
         {/* </Animation> */}
       </Col>
     </Row>
@@ -96,7 +96,7 @@ const Section4 = () => {
                 <li>Album ảnh cưới online</li>
               </ul>
             }</h2>
-            <Link to='/library/wedding'>
+            <Link to='/library/Wedding-Invitation'>
               <h3 className='pt-10'>{t('lang') === 'en' ? 'See all wedding template' : 'Xem tất cả mẫu'}</h3>
             </Link>
           </Col>
@@ -137,7 +137,7 @@ const Section5 = () => {
                 <li>Website sự kiện</li>
               </ul>
             }</h2>
-            <Link to='/library/event'>
+            <Link to='/library/Event-Invitation'>
               <h3 className='pt-10'>{t('lang') === 'en' ? 'See all event template' : 'Xem tất cả mẫu'}</h3>
             </Link>
           </Col>
@@ -177,7 +177,7 @@ const Section6 = () => {
             <h3 className='uppercase text-grey m-0 changeText'>{t('lang') === 'en' ? 'Product Category' : 'Sản phẩm | dịch vụ'}</h3>
             <h1 className='text-22 changeText'>{t('lang') === 'en' ? 'Party' : 'Party'}</h1>
             <h2 className='changeText'>{t('lang') === 'en' ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' : 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. (VI)'}</h2>
-            <Link to='/library/party'>
+            <Link to='/library/Party-Invitation'>
               <h3 className='pt-10 changeText'>{t('lang') === 'en' ? 'See all party template' : 'Xem tất cả mẫu'}</h3>
             </Link>
           </Col>
@@ -249,7 +249,7 @@ const Feedback = () => {
             <Col>
               <Row justify='center' className='py-20'>
                 <Col>
-                  <Avatar size='large' icon={<img src={backgroundImage} />} />
+                  <Avatar size='large' icon={<img src={backgroundImage} alt='' />} />
                 </Col>
               </Row>
               <h2 className='text-white text-center'>Do Nam Trung</h2>
@@ -262,7 +262,7 @@ const Feedback = () => {
             <Col>
               <Row justify='center' className='py-20'>
                 <Col>
-                  <Avatar size='large' icon={<img src={backgroundImage} />} />
+                  <Avatar size='large' icon={<img src={backgroundImage} alt='' />} />
                 </Col>
               </Row>
               <h2 className='text-white text-center'>Do Nam Trung</h2>
@@ -275,7 +275,7 @@ const Feedback = () => {
             <Col>
               <Row justify='center' className='py-20'>
                 <Col>
-                  <Avatar size='large' icon={<img src={backgroundImage} />} />
+                  <Avatar size='large' icon={<img src={backgroundImage} alt='' />} />
                 </Col>
               </Row>
               <h2 className='text-white text-center'>Do Nam Trung</h2>
@@ -294,7 +294,7 @@ const FooterSection = () => {
       <div className='container'>
         <Row justify='center' align='middle' className='h-100vh'>
           <Col>
-            <a href='/create-invitation'>
+            <a href='/invitation-create'>
               <h1 className='text-white pointer highlight'>Get Started!</h1>
             </a>
           </Col>
@@ -311,7 +311,15 @@ const Homepage = () => {
       if (document.getElementById('section7')) {
         const scrollSection7 = document.getElementById('section7').offsetTop;
         const scrollSectionFeedback = document.getElementById('feedbackSection').offsetTop;
-        const scrollCheck = window.scrollY > scrollSection7 - 500 && window.scrollY < scrollSection7 + 500 || window.scrollY > scrollSectionFeedback;
+        let scrollCheck = null;
+        if (window.scrollY > scrollSection7 - 500 && window.scrollY < scrollSection7 + 500) {
+          scrollCheck = true;
+        } else if (window.scrollY > scrollSectionFeedback) {
+          scrollCheck = true;
+        } else {
+          scrollCheck = false;
+        };
+
         if (scrollCheck) {
           document.getElementById('changeBackground').style.backgroundColor = '#000';
           document.getElementById('changeBackground').style.transition = '0.6s';

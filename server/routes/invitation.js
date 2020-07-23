@@ -1,9 +1,29 @@
 const router = require('express').Router();
 const passport = require('passport');
 const mongoose = require('mongoose');
+const multer = require('multer');
 const Profile = require('../models/profile.model');
 const Invitation = require('../models/invitation.model');
 require('../config/passport');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '../src/views/upload');
+  },
+  filename: function(req, file, cb) {
+    cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
+  }
+});
+
+const filter = (req, file, cb) => {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    return cb(null, true);
+  } else {
+    return cb(null, false);
+  }
+};
+
+const upload = multer({ storage: storage, fileFilter: filter });
 
 mongoose.set('useFindAndModify', false);
 
@@ -18,7 +38,7 @@ router.post('/create', passport.authenticate('jwt', {session : false}), (req, re
       .then(data => {
         data.invitation.push(newInvitation);
         data.save();
-        res.json(data);
+        res.json(newInvitation._id);
       })
       .catch(err => console.log(err));
     }
@@ -32,19 +52,20 @@ router.get('/list', passport.authenticate('jwt', {session : false}), (req, res) 
 });
 
 router.get('/list/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
-  Invitation.findById(res.params.id)
+  Invitation.findById(req.params.id)
   .then(data => res.json(data))
   .catch(err => res.json(err));
 });
 
 router.delete('/delete/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
-  Invitation.findOneAndDelete(req.params.id, (error, data) => {
+  Invitation.findByIdAndDelete(req.params.id, (error, data) => {
     if (error) {
       return next(error);
     } else {
       Profile.findById(req.user.profile._id, (err, data) => {
         data.invitation.map((item, index) => {
           if (item == req.params.id) {
+            console.log(item, req.params.id, index)
             return data.invitation.splice(index, 1);
           }
         });
@@ -76,6 +97,28 @@ router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req,
       res.json(newInvitation);
     }
   });
+});
+
+router.put('/upload/:id', upload.single('image'), passport.authenticate('jwt', {session : false}), (req, res) => {
+  if (req.file) {
+    let uploadFile = req.file.path.slice(0, -4).replace(/\\/g, "/");
+    Invitation.findById(req.params.id).then(data => {
+      const newContent = {
+        ...data.content,
+        [req.file.fieldname]: uploadFile
+      }
+      data.content = newContent
+      Invitation.findByIdAndUpdate(req.params.id, data, (err) => {
+        if (err) {
+          return next(err);
+        } else {
+          res.json({content: data});
+        }
+      });
+    });
+  } else {
+    res.json({message: 'No file'});
+  }
 });
 
 module.exports = router;

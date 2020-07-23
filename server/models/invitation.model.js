@@ -7,7 +7,7 @@ const InvitationSchema = new Schema({
   template: {type: Schema.Types.ObjectId, ref: 'template'},
   content: {type: Schema.Types.Mixed},
   guestlist: [{type: Schema.Types.ObjectId, ref: 'guestlist'}],
-  status: {type: String},
+  status: {type: Number},
 })
 
 const Invitation = mongoose.model('invitation', InvitationSchema);

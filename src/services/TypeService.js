@@ -57,7 +57,6 @@ export default {
   },
 
   typeUpdate: async (data, id) => {
-    console.log(id)
     const res = await (fetch(`/type/update/${id}`, {
       method: 'put',
       body: JSON.stringify(data),
