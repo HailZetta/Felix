@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5050;
+const port = process.env.SERVER_PORT || 5050;
 
 app.use(cors());
 app.use(cookieParser());
