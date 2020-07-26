@@ -5,6 +5,16 @@ const Users = require('../models/user.model');
 const passport = require('passport');
 const bcrypt = require('bcrypt');
 
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 const cookieExtractor = (req, res) =>{
   let token = null;
   if(req && req.cookies){
