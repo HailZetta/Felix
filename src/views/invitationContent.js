@@ -16,7 +16,7 @@ const InvitationContent = ({match, location}) => {
   const {params: { id }} = match;
   const { t } = useTranslation();
   const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index'));
-
+  
   useEffect(() => {
     InvitationService.invitationListId(id).then(data => {
       setInvitation(data);
@@ -60,13 +60,17 @@ const InvitationContent = ({match, location}) => {
                         }
                       })} />
                     : item.type === 'Time' ?
-                      <TimePicker value={invitation.content ? moment(invitation.content[item.variable], 'DD/MM/YYYY') : null} onChange={value => setInvitation({
-                        ...invitation,
-                        content: {
-                          ...invitation.content,
-                          [item.variable]: moment(value, 'DD/MM/YYYY')
-                        }
-                      })} />
+                      <TimePicker
+                        value={invitation.content ? moment(invitation.content[item.variable]) : null}
+                        format='HH:mm'
+                        onChange={value => setInvitation({
+                          ...invitation,
+                          content: {
+                            ...invitation.content,
+                            [item.variable]: moment(value, 'HH:mm')
+                          }
+                        })}
+                      />
                     : item.type === 'Image' ?
                       <Input
                         type='file'
@@ -113,6 +117,13 @@ const InvitationContent = ({match, location}) => {
       setVisible(false);
     };
 
+    const props = invitation ? {
+      ...invitation.content,
+      position: 'absolute',
+    } : null;
+
+    console.log(props)
+
     if (template) {
       return (
         <ModalTemp
@@ -124,7 +135,7 @@ const InvitationContent = ({match, location}) => {
         >
           <div className='container'>
             <Suspense fallback={<div>Loading...</div>}>
-              <PreviewContent {...invitation.content} />
+              <PreviewContent {...props} />
             </Suspense>
           </div>
         </ModalTemp>

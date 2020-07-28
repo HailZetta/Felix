@@ -25,13 +25,13 @@ const Template = ({match, location}) => {
 
   const getTemplate = () => {
     if (templateInfo) {
-      let props = {}
+      let props = [{position: 'absolute'}]
       
       for (let i in templateInfo.content) {
         if (templateInfo.content[i].type === 'Date') {
           props[templateInfo.content[i].variable] = moment(12/12/2012);
         } else if (templateInfo.content[i].type === 'Time') {
-          props[templateInfo.content[i].variable] = moment('12:12:12');
+          props[templateInfo.content[i].variable] = moment(12);
         } else {
           props[templateInfo.content[i].variable] = '.......................';
         }
@@ -64,10 +64,8 @@ const Template = ({match, location}) => {
       } else {
         return (
           <div className='container'>
-            <Row justify='center'>
-              <Col span={24}>
                 <Row justify='center'>
-                  <Col className='bg-white p-20' style={{border: '1px rgba(0, 0, 0, 0.1) solid'}}>
+                  <Col className='bg-white p-20' style={{border: '1px rgba(0, 0, 0, 0.1) solid'}} span={24}>
                     <Row justify='space-between'>
                       <Col>
                         <h3>{t('lang') === 'en' ? `Template: ${templateInfo.name_en}` : `Mẫu thiệp: ${templateInfo.name}`}</h3>
@@ -79,13 +77,15 @@ const Template = ({match, location}) => {
                         </Link>
                       </Col>
                     </Row>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <Content {...props} />
-                    </Suspense>
+                    <Row className='pt-10'>
+                      <Col span={24}>
+                        <Suspense fallback={<div>Loading...</div>}>
+                          <Content {...props} />
+                        </Suspense>
+                      </Col>
+                    </Row>
                   </Col>
                 </Row>
-              </Col>
-            </Row>
           </div>
         )
       }

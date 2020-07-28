@@ -25,10 +25,11 @@ const InvitationView = ({match, location}) => {
       const props = {
         ...invitation.content,
         guest: guest,
+        position: 'fixed',
       };
       
       return (
-        <div>
+        <div style={{height: '100vh'}}>
           <Suspense fallback={<div>Loading...</div>}>
             <PreviewContent {...props} />
           </Suspense>

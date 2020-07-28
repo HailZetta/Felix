@@ -33,6 +33,7 @@ function App() {
       <Route path='/libraries' component={Libraries} />
       <Route path='/library/:type_en' component={Library} />
       <Route path='/contact' component={Contact} />
+      <Route path='/invi/:invi_id/:guest_id' component={InvitationView} />
       <UnPrivateRoute path='/login' component={Login} />
       <UnPrivateRoute path='/register' component={Register} />
       <PrivateRoute path='/admin-panel' roles={'admin'} component={AdminPanel} />
@@ -47,7 +48,6 @@ function App() {
       <PrivateRoute path='/invitation-guest/:id' roles={['user', 'admin']} component={InvitationGuest} />
       <PrivateRoute path='/invitation-payment/:id' roles={['user', 'admin']} component={InvitationPayment} />
       <PrivateRoute path='/invitation-finish/:id' roles={['user', 'admin']} component={InvitationFinish} />
-      <PrivateRoute path='/invi/:invi_id/:guest_id' roles={['user', 'admin']} component={InvitationView} />
     </Router>
   );
 }

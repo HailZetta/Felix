@@ -44,6 +44,7 @@ const InvitationPayment = ({match, location}) => {
 
       const props = {
         ...invitation.content,
+        position: 'absolute',
       };
 
       return (
@@ -91,7 +92,7 @@ const InvitationPayment = ({match, location}) => {
   return (
     <LayoutWrap>
       <ProcessStep status={invitation ? invitation.status : null} />
-      <Row justify='center' className='container'>
+      <Row justify='center' className='p-20'>
         <Col xs={24} md={12}>
           {OrderInfomation()}
         </Col>

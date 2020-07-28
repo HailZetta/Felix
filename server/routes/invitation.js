@@ -51,7 +51,7 @@ router.get('/list', passport.authenticate('jwt', {session : false}), (req, res) 
   .catch(err => res.json(err));
 });
 
-router.get('/list/:id', passport.authenticate('jwt', {session : false}), (req, res) => {
+router.get('/list/:id', (req, res) => {
   Invitation.findById(req.params.id)
   .then(data => res.json(data))
   .catch(err => res.json(err));
