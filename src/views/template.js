@@ -21,7 +21,7 @@ const Template = ({match, location}) => {
     TemplateService.templateListId(templateId).then(data => setTemplateInfo(data));
   }, []);
 
-  const Content = React.lazy(() => import(templateInfo.templateFile.replace('../src/views', '.') + '/index'));
+  const Content = React.lazy(() => import(templateInfo.templateFile.replace('../src/views', '.') + '/index.js'));
 
   const getTemplate = () => {
     if (templateInfo) {

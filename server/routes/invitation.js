@@ -99,23 +99,27 @@ router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req,
   });
 });
 
-router.put('/upload/:id', upload.single('image'), passport.authenticate('jwt', {session : false}), (req, res) => {
-  if (req.file) {
-    let uploadFile = req.file.path.slice(0, -4).replace(/\\/g, "/");
+router.put('/upload/:id', upload.any(), passport.authenticate('jwt', {session : false}), (req, res) => {
+  if (req.files) {
+
     Invitation.findById(req.params.id).then(data => {
-      const newContent = {
-        ...data.content,
-        [req.file.fieldname]: uploadFile
-      }
-      data.content = newContent
+      for (let i = 0; i < req.files.length; i++) {
+        console.log(req.files[i]);
+        data.content = {
+          ...data.content,
+          [req.files[i].fieldname]: req.files[i].path.replace(/\\/g, "/"),
+        }
+      };
+
       Invitation.findByIdAndUpdate(req.params.id, data, (err) => {
         if (err) {
           return next(err);
         } else {
-          res.json({content: data});
+          res.json(data);
         }
       });
     });
+
   } else {
     res.json({message: 'No file'});
   }

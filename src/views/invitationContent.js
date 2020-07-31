@@ -15,7 +15,7 @@ const InvitationContent = ({match, location}) => {
   let [visible, setVisible] = useState(false);
   const {params: { id }} = match;
   const { t } = useTranslation();
-  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index'));
+  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index.js'));
   
   useEffect(() => {
     InvitationService.invitationListId(id).then(data => {
@@ -41,6 +41,13 @@ const InvitationContent = ({match, location}) => {
     const tailLayout = {
       wrapperCol: { offset: 4, span: 20 },
     };
+
+    const showImage = (link) => {
+      let uploadFile = require(`${link.replace('../src/views', '.')}`);
+      return (
+        <img src={uploadFile} alt='' style={{height: '200px', border: '1px rgba(0, 0, 0, 0.3) solid', margin: '20px 0'}} />
+      )
+    }
 
     if (template) {
       return (
@@ -72,16 +79,17 @@ const InvitationContent = ({match, location}) => {
                         })}
                       />
                     : item.type === 'Image' ?
-                      <Input
-                        type='file'
-                        onChange={e => setInvitation({
-                          ...invitation,
-                          content: {
-                            ...invitation.content,
-                            // [item.variable]: moment(value, 'DD/MM/YYYY')
-                          }
-                        })}
-                      />
+                      <>
+                        <Input
+                          type='file'
+                          onChange={e => {
+                            let newUpload = new FormData();
+                            newUpload.append(item.variable, e.target.files[0]);
+                            InvitationService.invitationUpload(newUpload, invitation._id).then(data => setInvitation(data));
+                          }}
+                        />
+                        {invitation.content[item.variable] ? showImage(invitation.content[item.variable]) : null}
+                      </>
                     :
                       <Input value={invitation.content ? invitation.content[item.variable] : null} onChange={e => setInvitation({
                         ...invitation,

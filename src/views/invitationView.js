@@ -10,7 +10,7 @@ const InvitationView = ({match, location}) => {
   let [guest, setGuest] = useState([]);
   const {params: {invi_id, guest_id}} = match;
   
-  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index'));
+  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index.js'));
 
   useEffect(() => {
     InvitationService.invitationListId(invi_id).then(data => {

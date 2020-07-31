@@ -13,7 +13,7 @@ const InvitationPayment = ({match, location}) => {
   let [type, setType] = useState();
   const { t } = useTranslation();
   const {params: { id }} = match;
-  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index'));
+  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index.js'));
 
   useEffect(() => {
     InvitationService.invitationListId(id).then(data => {

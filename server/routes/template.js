@@ -10,6 +10,7 @@ require('../config/passport');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    console.log(file);
     cb(null, '../src/views/templates')
   },
   filename: (req, file, cb) => {
@@ -32,7 +33,10 @@ mongoose.set('useFindAndModify', false);
 router.post('/upload', upload.single('templateFile'), passport.authenticate('jwt', {session : false}), (req, res) => {
   if (req.file) {
     let {name, name_en, type, status, price} = req.body;
-    let content = JSON.parse(req.body.content);
+    let content = null;
+    if (req.body.content) {
+      content = JSON.parse(req.body.content);
+    }
 
     let uploadFile = req.file.path;
     fs.createReadStream(uploadFile).pipe(unzipper.Extract({ path: '../src/views/templates' }));
