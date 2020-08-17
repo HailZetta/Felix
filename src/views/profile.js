@@ -7,6 +7,7 @@ import ProfileService from '../services/ProfileService';
 import { AuthContext } from '../context/AuthContext';
 import AuthService from '../services/AuthService';
 import SiderWrap from '../components/sider';
+import CreateButton from '../components/create-button';
 
 const { Sider, Content } = Layout;
 
@@ -165,6 +166,7 @@ const Profile = () => {
 
   return (
     <LayoutWrap>
+      <CreateButton />
       {DashboardContent()}
     </LayoutWrap>
   )

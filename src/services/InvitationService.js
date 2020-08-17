@@ -50,7 +50,6 @@ export default {
         'Content-Type': 'application/json'
       }
     }))
-
     if (res.status !== 401) {
       return (res.json().then(data => data))
     } else {

@@ -24,6 +24,10 @@ import InvitationGuest from './views/invitationGuest';
 import InvitationPayment from './views/invitationPayment';
 import InvitationFinish from './views/invitationFinish';
 import InvitationView from './views/invitationView';
+import TemplatePreview from './views/templatePreview';
+import InvitationPreview from './views/invitationPreview';
+import InvitationCheckIn from './views/invitationCheckIn';
+import GuestConfirm from './views/guestConfirm';
 
 function App() {
   return (
@@ -33,7 +37,10 @@ function App() {
       <Route path='/libraries' component={Libraries} />
       <Route path='/library/:type_en' component={Library} />
       <Route path='/contact' component={Contact} />
+      <Route path='/template-preview/:temp_id' component={TemplatePreview} />
+      <Route path='/invitation-preview/:invi_id' component={InvitationPreview} />
       <Route path='/invi/:invi_id/:guest_id' component={InvitationView} />
+      <Route path='/guest-confirm/:invi_id/:guest_id' component={GuestConfirm} />
       <UnPrivateRoute path='/login' component={Login} />
       <UnPrivateRoute path='/register' component={Register} />
       <PrivateRoute path='/admin-panel' roles={'admin'} component={AdminPanel} />
@@ -48,6 +55,7 @@ function App() {
       <PrivateRoute path='/invitation-guest/:id' roles={['user', 'admin']} component={InvitationGuest} />
       <PrivateRoute path='/invitation-payment/:id' roles={['user', 'admin']} component={InvitationPayment} />
       <PrivateRoute path='/invitation-finish/:id' roles={['user', 'admin']} component={InvitationFinish} />
+      <PrivateRoute path='/check-in/:id' roles={['user', 'admin']} component={InvitationCheckIn} />
     </Router>
   );
 }

@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import InvitationService from '../services/InvitationService';
 import LayoutWrap from '../components/layout';
 import ProcessStep from '../components/step';
-import { Space, Table } from 'antd';
+import { Space, Table, Button } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import GuestService from '../services/GuestService';
+import CreateButton from '../components/create-button';
 
 const InvitationFinish = ({match, location}) => {
   let [invitation, setInvitation] = useState();
@@ -17,31 +18,29 @@ const InvitationFinish = ({match, location}) => {
   useEffect(() => {
     InvitationService.invitationListId(id).then(data => {
       setInvitation(data)
-      for (let i = 0; i < data.guestlist.length; i++) {
-        GuestService.guestListId(data.guestlist[i]).then(data => setGuestDataList(guestDataList => [...guestDataList, data]))
+      for (let i in data.guestlist) {
+        GuestService.guestListId(data.guestlist[i].guestId).then(data => setGuestDataList(guestDataList => [...guestDataList, data]))
       }
     })
   }, []);
-  
 
   const LinkTable = () => {
-    const handleCopy = () => {
-      console.log('test');
-    }
     const columns = [
       {title: t('lang') === 'en' ? 'No' : 'STT', dataIndex: 'no', align: 'center'},
       {title: t('lang') === 'en' ? 'Guest' : 'Khách mời', dataIndex: 'fullname'},
       {title: t('lang') === 'en' ? 'Display Name (Optional)' : 'Tên hiển thị (tùy chọn)', dataIndex: 'displayname'},
       {title: t('lang') === 'en' ? 'Tel' : 'Điện thoại', dataIndex: 'tel'},
       {title: 'Email', dataIndex: 'email'},
-      {title: t('lang') === 'en' ? 'Invitation' : 'Thiệp mời', align: 'center', render: (record) => (
-        <Space size='middle'>
-          <Link to={`/invi/${invitation._id}/${record._id}`}>
-            <span>{`thiepcuoidientu.com.vn/invi/${invitation._id}/${record._id}`}</span>
-          </Link>
-          <CopyOutlined onClick={handleCopy} />
-        </Space>
-      )}
+      {title: t('lang') === 'en' ? 'Invitation' : 'Thiệp mời', align: 'center', render: (record) => {
+        return (
+          <Space size='middle'>
+            <Link to={`/invi/${invitation._id}/${record._id}`} target='_blank'>
+              <span id='theLink'>{`thiepcuoidientu.com.vn/invi/${invitation._id}/${record._id}`}</span>
+            </Link>
+            {/* <Button type='dashed' onClick={handleCopy(record)}><CopyOutlined /> Copy</Button> */}
+          </Space>
+        )
+      }}
     ];
 
     const processData = (data) => {
@@ -66,10 +65,15 @@ const InvitationFinish = ({match, location}) => {
       </div>
     )
   }
+
+  const handleCopy = (record) => {
+    const el = `thiepcuoidientu.com.vn/invi/${invitation._id}/${record._id}`;
+  }
   
   return (
     <LayoutWrap>
-      <ProcessStep status={invitation ? invitation.status : null} />
+      <CreateButton />
+      <ProcessStep status={invitation ? invitation.status : null} invitationId={id} />
       {LinkTable()}
     </LayoutWrap>
   )

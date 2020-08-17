@@ -12,6 +12,7 @@ import backgroundImage from '../assets/dashboard-banner.jpg';
 import imageSection1 from '../assets/cover.png';
 import Animation from '../components/animate';
 import AnimateText from '../components/animate-text';
+import CreateButton from '../components/create-button';
 
 const Section1 = () => {
   const items =['regards', 'charming', 'easily'];
@@ -344,6 +345,7 @@ const Homepage = () => {
 
   return (
     <LayoutWrap>
+      <CreateButton />
       <div id='changeBackground'>
         {Section1()}
         {Section2()}

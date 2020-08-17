@@ -25,7 +25,8 @@ const InvitationView = ({match, location}) => {
       const props = {
         ...invitation.content,
         guest: guest,
-        position: 'fixed',
+        inviId: invi_id,
+        guestId: guest_id
       };
       
       return (

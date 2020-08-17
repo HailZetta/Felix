@@ -41,7 +41,7 @@ const ChooseTemplate = ({match, location}) => {
     return (
       <div className='container'>
         <h1 className='pt-50 text-highlight text-center text-weight-300'>{t('lang') === 'en' ? 'Pick the template' : 'Chọn mẫu thiệp'}</h1>
-        <Row justify='space-between' gutter={[20, 20]} className='px-20'>
+        <Row justify='space-around' gutter={[20, 20]} className='px-20'>
           {templateId ? templateId.map((item, index) => {
             for (let i in templateList) {
               if (templateList[i]._id === item) {
@@ -100,7 +100,7 @@ const ChooseTemplate = ({match, location}) => {
 
   return (
     <LayoutWrap>
-      <ProcessStep status={invitation ? invitation.status : null} />
+      <ProcessStep status={invitation ? invitation.status : null} invitationId={id} />
       {TemplateArea()}
     </LayoutWrap>
   )

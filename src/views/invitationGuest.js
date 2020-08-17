@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import LayoutWrap from '../components/layout';
-import { Row, Col, Form, Input, Button, Table, Space } from 'antd';
+import { Row, Col, Form, Input, Button, Table, Space, Alert } from 'antd';
 import { useTranslation } from 'react-i18next';
 import ProcessStep from '../components/step';
 import InvitationService from '../services/InvitationService';
@@ -8,14 +8,17 @@ import GuestService from '../services/GuestService';
 import ModalTemp from '../components/modal';
 import ProfileService from '../services/ProfileService';
 import { AuthContext } from '../context/AuthContext';
+import { use } from 'passport';
 
 const InvitationGuest = ({match, location}) => {
   let [invitation, setInvitation] = useState();
   let [guestData, setGuestData] = useState([]);
   let [guestDataList, setGuestDataList] = useState([]);
   let [guestItem, setGuestItem] = useState({fullname: '', displayname: '', tel: '', email: ''});
+  let [savedGuestList, setSavedGuestList] = useState([]);
   let [edit, setEdit] = useState(null);
   let [visible, setVisible] = useState(false);
+  let [message, setMessage] = useState();
   const { user } = useContext(AuthContext);
   const { t } = useTranslation();
   const {params: { id }} = match;
@@ -24,7 +27,7 @@ const InvitationGuest = ({match, location}) => {
     InvitationService.invitationListId(id).then(data => {
       setInvitation(data)
       for (let i in data.guestlist) {
-        GuestService.guestListId(data.guestlist[i]).then(data => setGuestDataList(guestDataList => [...guestDataList, data]))
+        GuestService.guestListId(data.guestlist[i].guestId).then(data => setGuestDataList(guestDataList => [...guestDataList, data]))
       }
     })
     ProfileService.profileListId(user.profile).then(data => {
@@ -43,17 +46,25 @@ const InvitationGuest = ({match, location}) => {
     ];
 
     const handleAdd = () => {
-      GuestService.guestCreate(guestItem).then(data => {
-        InvitationService.invitationUpdate({
-          ...invitation,
-          guestlist: [
-            ...invitation.guestlist,
-            data._id,
-          ]
-        }, id).then(data => setInvitation(data));
-        setGuestDataList(guestDataList => [...guestDataList, data])
-      })
-      setGuestItem({fullname: '', displayname: '', tel: '', email: ''});
+      if (guestItem.fullname) {
+        setMessage();
+        GuestService.guestCreate(guestItem).then(data => {
+          InvitationService.invitationUpdate({
+            ...invitation,
+            guestlist: [
+              ...invitation.guestlist,
+              {
+                guestId: data._id,
+                status: 'noresponse'
+              }
+            ]
+          }, id).then(data => setInvitation(data));
+          setGuestDataList(guestDataList => [...guestDataList, data])
+        })
+        setGuestItem({fullname: '', displayname: '', tel: '', email: ''});
+      } else {
+        setMessage(t('lang') === 'en' ? 'Fill fullname of guest' : 'Điền thông tin khách mời');
+      }
     }
 
     const handleUpdate = () => {
@@ -68,6 +79,11 @@ const InvitationGuest = ({match, location}) => {
 
     return (
       <div className='container p-20'>
+        <Row justify='center' className='container mb-10'>
+          <Col xs={24} md={7}>
+            {message ? <Alert message={message} type="error" showIcon={true} className='message' /> : null}
+          </Col>
+        </Row>
         <Row justify='center' className='pt-20'>
           <Col>
             <Form layout='inline'>
@@ -97,13 +113,21 @@ const InvitationGuest = ({match, location}) => {
   }
 
   const GuestListTable = () => {
-    const handleDelete = (id) => {
-      const newData = guestDataList.filter(item => item._id !== id);
+    const handleDelete = (guestId) => {
+      const newData = guestDataList.filter(item => item._id !== guestId);
       setGuestDataList(newData);
+
+      const newProcessData = newData.map((item, index) => {
+        return {
+          guestId: item,
+          status: 'noresponse'
+        }
+      });
+
       InvitationService.invitationUpdate({
         ...invitation,
-        guestlist: newData,
-      }, invitation._id)
+        guestlist: newProcessData,
+      }, id).then(data => setInvitation(data));
     }
 
     const handleEdit = (id) => {
@@ -112,7 +136,6 @@ const InvitationGuest = ({match, location}) => {
       });
       setGuestItem(guestItemEdit);
       setEdit(guestDataList.indexOf(guestItemEdit));
-      console.log(guestDataList.indexOf(guestItemEdit))
     }
 
     const columns = [
@@ -174,13 +197,21 @@ const InvitationGuest = ({match, location}) => {
     }
 
     const handleOk = () => {
-      const newGuestList = invitation.guestlist.concat(guestItem);
+      const newSavedGuestList = invitation.guestlist.concat(savedGuestList);
       InvitationService.invitationUpdate({
         ...invitation,
-        guestlist: newGuestList,
-      }, id).then(data => setInvitation(data))
-      setGuestDataList(guestDataList.concat(guestItem));
+        guestlist: newSavedGuestList,
+      }, id).then(data => {
+        setInvitation(data)
+      });
+
+      const newGuestItem = savedGuestList.map((item, index) => {
+        return item.guestId
+      });
+      
+      setGuestDataList(guestDataList.concat(newGuestItem));
       setGuestItem({fullname: '', displayname: '', tel: '', email: ''});
+      setSavedGuestList([]);
       setVisible(false);
     }
 
@@ -196,8 +227,14 @@ const InvitationGuest = ({match, location}) => {
           rowKey='_id'
           rowSelection={{
             type: 'checkbox',
-            onChange: (selectedRowKeys, selectedRows) => {
-              setGuestItem(selectedRows)
+            onSelect: (selectedRowKeys, selectedRows) => {
+              if (selectedRows === true) {
+                const newSelectedData = {
+                  guestId: selectedRowKeys,
+                  status: 'noresponse'
+                };
+                setSavedGuestList(savedGuestList => [...savedGuestList, newSelectedData]);
+              }
             }
           }}
           columns={columns}
@@ -215,7 +252,7 @@ const InvitationGuest = ({match, location}) => {
 
   return (
     <LayoutWrap>
-      <ProcessStep status={invitation ? invitation.status : null} />
+      <ProcessStep status={invitation ? invitation.status : null} invitationId={id} />
       {GuestListForm()}
       {GuestListTable()}
       {SavedGuest()}

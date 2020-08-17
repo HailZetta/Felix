@@ -90,6 +90,7 @@ router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req,
     guestlist: guestlist,
     status: status,
   }
+  console.log(newInvitation);
   Invitation.findByIdAndUpdate(req.params.id, newInvitation, (err) => {
     if (err) {
       return next(err);
@@ -101,13 +102,11 @@ router.put('/update/:id', passport.authenticate('jwt', {session : false}), (req,
 
 router.put('/upload/:id', upload.any(), passport.authenticate('jwt', {session : false}), (req, res) => {
   if (req.files) {
-
     Invitation.findById(req.params.id).then(data => {
       for (let i = 0; i < req.files.length; i++) {
-        console.log(req.files[i]);
         data.content = {
           ...data.content,
-          [req.files[i].fieldname]: req.files[i].path.replace(/\\/g, "/"),
+          [req.files[i].fieldname]: req.files[i].filename,
         }
       };
 

@@ -8,6 +8,7 @@ import TypeService from '../services/TypeService';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo-color.png';
 import premiumIcon from '../assets/premium-icon.png';
+import CreateButton from '../components/create-button';
 
 const { useBreakpoint } = Grid;
 const { Meta } = Card;
@@ -159,6 +160,7 @@ const Libraries = () => {
 
   return (
     <LayoutWrap>
+      <CreateButton />
       {Banner()}
       {TemplateList()}
       {FooterSection()}

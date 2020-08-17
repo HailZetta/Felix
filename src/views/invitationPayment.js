@@ -2,10 +2,11 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 import LayoutWrap from '../components/layout';
 import ProcessStep from '../components/step';
 import InvitationService from '../services/InvitationService';
-import { Row, Col, Divider, Table } from 'antd';
+import { Row, Col, Divider, Table, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import TemplateService from '../services/TemplateService';
 import TypeService from '../services/TypeService';
+import { Link } from 'react-router-dom';
 
 const InvitationPayment = ({match, location}) => {
   let [invitation, setInvitation] = useState();
@@ -13,7 +14,6 @@ const InvitationPayment = ({match, location}) => {
   let [type, setType] = useState();
   const { t } = useTranslation();
   const {params: { id }} = match;
-  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index.js'));
 
   useEffect(() => {
     InvitationService.invitationListId(id).then(data => {
@@ -32,7 +32,7 @@ const InvitationPayment = ({match, location}) => {
         {title: t('lang') === 'en' ? 'Total Amount' : 'Tổng tiền thanh toán', dataIndex: 'total', align: 'right', render: (text) => (
           <h2 className='m-0'>{text}</h2>
         )},
-      ]
+      ];
 
       const data = [{
         key: invitation._id,
@@ -40,12 +40,9 @@ const InvitationPayment = ({match, location}) => {
         template: t('lang') === 'en' ? template.name_en : template.name,
         guestlist: invitation.guestlist.length,
         total: template.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
-      }]
-
-      const props = {
-        ...invitation.content,
-        position: 'absolute',
-      };
+      }];
+      
+      const thumbnail = require(template.templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
 
       return (
         <div>
@@ -59,9 +56,14 @@ const InvitationPayment = ({match, location}) => {
           />
           <Row justify='center' className='pt-20'>
             <Col span={20} style={{border: '1px rgba(0, 0, 0, 0.1) solid'}} className='bg-white p-20'>
-              <Suspense fallback={<div>Loading...</div>}>
-                <PreviewContent {...props} />
-              </Suspense>
+              <img src={thumbnail} alt='' className='w-100p' />
+            </Col>
+          </Row>
+          <Row justify='center pt-20'>
+            <Col>
+              <Link to={`/invitation-preview/${invitation._id}`} target='_blank'>
+                <Button type='primary' className='button'>{t('lang') === 'en' ? 'Preview' : 'Xem thiệp'}</Button>
+              </Link>
             </Col>
           </Row>
         </div>
@@ -91,7 +93,7 @@ const InvitationPayment = ({match, location}) => {
 
   return (
     <LayoutWrap>
-      <ProcessStep status={invitation ? invitation.status : null} />
+      <ProcessStep status={invitation ? invitation.status : null} invitationId={id} />
       <Row justify='center' className='p-20'>
         <Col xs={24} md={12}>
           {OrderInfomation()}

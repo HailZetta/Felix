@@ -8,6 +8,7 @@ import logo from '../assets/logo-color.png';
 import premiumIcon from '../assets/premium-icon.png';
 import { Card, Row, Col, Button, Carousel } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import CreateButton from '../components/create-button';
 
 const { Meta } = Card;
 
@@ -146,6 +147,7 @@ const Library = ({match, location}) => {
   
   return(
     <LayoutWrap>
+      <CreateButton />
       {Banner()}
       {GetType()}
       {FooterSection()}

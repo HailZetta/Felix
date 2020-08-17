@@ -3,6 +3,7 @@ import LayoutWrap from '../components/layout';
 import { useTranslation } from 'react-i18next';
 import { Row, Col, Input, Form, Button } from 'antd';
 import RequireService from '../services/RequireService';
+import CreateButton from '../components/create-button';
 
 const { TextArea } = Input;
 
@@ -76,6 +77,7 @@ const RequestForm = () => {
 const Contact = () => {
   return (
     <LayoutWrap>
+      <CreateButton />
       <Row justify='center' align='middle' className='h-95vh'>
         <Col xs={24} md={12}>
           <Row justify='center'>

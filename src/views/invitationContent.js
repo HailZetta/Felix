@@ -43,7 +43,7 @@ const InvitationContent = ({match, location}) => {
     };
 
     const showImage = (link) => {
-      let uploadFile = require(`${link.replace('../src/views', '.')}`);
+      let uploadFile = require(`./upload/${link}`);
       return (
         <img src={uploadFile} alt='' style={{height: '200px', border: '1px rgba(0, 0, 0, 0.3) solid', margin: '20px 0'}} />
       )
@@ -104,10 +104,13 @@ const InvitationContent = ({match, location}) => {
                 <Form.Item {...tailLayout}>
                   {invitation.content ?
                     <Space size='middle'>
-                      <Link to={`/invitation-guest/${id}`}>
-                        <Button type='primary' className='button' onClick={handleSave}>{t('save')}</Button>
+                      <Button type='primary' className='button' onClick={handleSave}>{t('save')}</Button>
+                      <Link to={`/invitation-preview/${id}`} target='_blank'>
+                        <Button type='primary' className='button'>{t('preview')}</Button>
                       </Link>
-                      <Button type='primary' className='button' onClick={handlePreview}>{t('preview')}</Button>
+                      <Link to={`/invitation-guest/${id}`}>
+                        <Button type='primary' className='button'>{t('next')}</Button>
+                      </Link>
                     </Space>
                   : null}
                 </Form.Item>
@@ -127,10 +130,7 @@ const InvitationContent = ({match, location}) => {
 
     const props = invitation ? {
       ...invitation.content,
-      position: 'absolute',
     } : null;
-
-    console.log(props)
 
     if (template) {
       return (
@@ -153,7 +153,7 @@ const InvitationContent = ({match, location}) => {
 
   return (
     <LayoutWrap>
-      <ProcessStep status={invitation ? invitation.status : null} />
+      <ProcessStep status={invitation ? invitation.status : null} invitationId={id} />
       {ContentForm()}
       {previewModal()}
     </LayoutWrap>

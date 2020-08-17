@@ -26,7 +26,7 @@ const TypeList = () => {
         <Row justify='center' align='middle' className='h-80vh'>
           <Col>
             <h1 className='text-highlight text-center text-weight-300'>{t('lang') === 'en' ? 'Which type of invitation do you choose?' : 'Bạn đang cần loại thiệp nào?'}</h1>
-            <Row justify='space-between' gutter={[20, 20]} className='pt-50 px-20'>
+            <Row justify='space-around' gutter={[20, 20]} className='pt-50 px-20'>
               {typeList.map((item, index) => (
                 <Col xs={24} sm={12} md={8} lg={6} key={index}>
                   <Card hoverable cover={<img src={typeThumbnail} alt='' />} onClick={() => handleClick(item)}>

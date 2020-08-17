@@ -11,6 +11,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-color.png';
 import premiumIcon from '../assets/premium-icon.png';
+import CreateButton from '../components/create-button';
 
 const { Sider, Content } = Layout;
 const { Meta } = Card;
@@ -27,8 +28,6 @@ const InvitationList = () => {
   let [typeData, setTypeData] = useState([]);
   const { user } = useContext(AuthContext);
   const { t } = useTranslation();
-
-  console.log(invitationList)
 
   useEffect(() => {
     ProfileService.profileListId(user.profile).then(data => {
@@ -55,6 +54,10 @@ const InvitationList = () => {
     : `/invitation-finish/${record._id}`
   }
 
+  const handleCheckIn = (record) => {
+    window.location = `/check-in/${record._id}`;
+  }
+
   const columns = [
     {title: t('lang') === 'en' ? 'No' : 'STT', dataIndex: 'no', align: 'center'},
     {title: t('lang') === 'en' ? 'Type' : 'Loại thiệp', dataIndex: 'type', align: 'center'},
@@ -69,10 +72,17 @@ const InvitationList = () => {
         (t('lang') === 'en' ? 'Finish' : 'Hoàn tất')}
       </span>
     )},
-    {title: t('lang') === 'en' ? 'Option' : 'Tùy chọn', align: 'center', render: (record) => (
+    {title: t('lang') === 'en' ? 'Option' : 'Tùy chọn', align: 'center', render: (row, record) => (
       <Space size='middle'>
         <Button type='dashed' onClick={() => handleDelete(record._id)}>{t('lang') === 'en' ? 'Delete' : 'Xóa'}</Button>
-        <Button type='dashed' onClick={() => handleEdit(record)}>{t('lang') === 'en' ? 'Edit' : 'Chỉnh sửa'}</Button>
+        {row.status === 4 ?
+          <Space size='middle'>
+            <Button type='dashed' onClick={() => handleEdit(record)}>{t('lang') === 'en' ? 'View' : 'Xem thiệp'}</Button>
+            <Button type='dashed' onClick={() => handleCheckIn(record)}>{t('lang') === 'en' ? 'Check In' : 'Check In'}</Button>
+          </Space>
+        :
+          <Button type='dashed' onClick={() => handleEdit(record)}>{t('lang') === 'en' ? 'Edit' : 'Chỉnh sửa'}</Button>
+        }
       </Space>
     )}
   ];
@@ -200,6 +210,7 @@ const DashboardContent = () => {
 const Invitation = () => {
   return (
     <LayoutWrap>
+      <CreateButton />
       {DashboardContent()}
     </LayoutWrap>
   )

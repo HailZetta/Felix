@@ -7,6 +7,7 @@ import ProfileService from '../services/ProfileService';
 import GuestService from '../services/GuestService';
 import SiderWrap from '../components/sider';
 import InvitationService from '../services/InvitationService';
+import CreateButton from '../components/create-button';
 
 const { Sider, Content } = Layout;
 
@@ -154,6 +155,7 @@ const GuestList = () => {
 
   return (
     <LayoutWrap>
+      <CreateButton />
       {DashboardContent()}
     </LayoutWrap>
   )
