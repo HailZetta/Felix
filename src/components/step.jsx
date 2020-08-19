@@ -49,6 +49,10 @@ const ProcessStep = (props) => {
             return (
               <Step title={t('lang') === 'en' ? item.title_en : item.title} key={index} status={item.status} icon={item.icon} />
             )
+          } else if (item.slug === 'finish' && props.status !== 4) {
+            return (
+              <Step title={t('lang') === 'en' ? item.title_en : item.title} key={index} status={item.status} icon={item.icon} />
+            )
           } else {
             return (
               <Step title={<Link to={`/invitation-${item.slug}/${props.invitationId}`}>{t('lang') === 'en' ? item.title_en : item.title}</Link>} key={index} status={item.status} icon={item.icon} />

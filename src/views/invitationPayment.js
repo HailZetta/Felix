@@ -42,7 +42,7 @@ const InvitationPayment = ({match, location}) => {
         total: template.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "."),
       }];
       
-      const thumbnail = require(template.templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
+      const thumbnail = require(template.templateFile.replace('src/views', '.') + '/thumbnail.jpg');
 
       return (
         <div>

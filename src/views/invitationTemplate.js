@@ -45,7 +45,7 @@ const ChooseTemplate = ({match, location}) => {
           {templateId ? templateId.map((item, index) => {
             for (let i in templateList) {
               if (templateList[i]._id === item) {
-                const thumbnail = require(templateList[i].templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
+                const thumbnail = require(templateList[i].templateFile.replace('src/views', '.') + '/thumbnail.jpg');
                 return (
                   <Col xs={24} sm={12} md={8} lg={6} key={index}>
                     <Card

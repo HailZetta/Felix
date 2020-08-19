@@ -22,7 +22,7 @@ const Template = ({match, location}) => {
     TemplateService.templateListId(templateId).then(data => setTemplateInfo(data));
   }, []);
 
-  const Content = React.lazy(() => import(templateInfo.templateFile.replace('../src/views', '.') + '/index.js'));
+  const Content = React.lazy(() => import(templateInfo.templateFile.replace('src/views', '.') + '/index.js'));
 
   const getTemplate = () => {
     if (templateInfo) {
@@ -39,7 +39,7 @@ const Template = ({match, location}) => {
         }
       }
 
-      const thumbnail = require(templateInfo.templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
+      const thumbnail = require(templateInfo.templateFile.replace('src/views', '.') + '/thumbnail.jpg');
 
       if (templateInfo.status === 'private' && !isAuthenticated) {
         return (

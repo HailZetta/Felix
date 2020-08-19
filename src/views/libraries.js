@@ -68,7 +68,7 @@ const TemplateList = () => {
               {item.template ? item.template.map((item, index) => {
                 for (let i in templateList) {
                   if (templateList[i]._id === item) {
-                    const thumbnail = require(templateList[i].templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
+                    const thumbnail = require(templateList[i].templateFile.replace('src/views', '.') + '/thumbnail.jpg');
                     return (
                       <div className='p-20'>
                         <Card hoverable cover={

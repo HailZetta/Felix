@@ -120,7 +120,7 @@ const InvitationList = () => {
         {invitationList.map((item, index) => {
           for (let i in templateData) {
             if (templateData[i]._id === item.template) {
-              const thumbnail = require(templateData[i].templateFile.replace('../src/views', '.') + '/thumbnail.jpg');
+              const thumbnail = require(templateData[i].templateFile.replace('src/views', '.') + '/thumbnail.jpg');
               return (
                 <Col xs={24} sm={12} md={8} lg={6} className='p-20' key={index}>
                   <Card hoverable cover={

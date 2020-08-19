@@ -15,7 +15,7 @@ const InvitationContent = ({match, location}) => {
   let [visible, setVisible] = useState(false);
   const {params: { id }} = match;
   const { t } = useTranslation();
-  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index.js'));
+  const PreviewContent = lazy(() => import(template.templateFile.replace('src/views', '.') + '/index.js'));
   
   useEffect(() => {
     InvitationService.invitationListId(id).then(data => {
@@ -34,12 +34,12 @@ const InvitationContent = ({match, location}) => {
   
   const ContentForm = () => {
     const layout = {
-      labelCol: { span: 4 },
-      wrapperCol: { span: 20 },
+      labelCol: { span: 8 },
+      wrapperCol: { span: 16 },
     };
 
     const tailLayout = {
-      wrapperCol: { offset: 4, span: 20 },
+      wrapperCol: { offset: 8, span: 16 },
     };
 
     const showImage = (link) => {
@@ -88,7 +88,7 @@ const InvitationContent = ({match, location}) => {
                             InvitationService.invitationUpload(newUpload, invitation._id).then(data => setInvitation(data));
                           }}
                         />
-                        {invitation.content[item.variable] ? showImage(invitation.content[item.variable]) : null}
+                        {invitation.content && invitation.content[item.variable] ? showImage(invitation.content[item.variable]) : null}
                       </>
                     :
                       <Input value={invitation.content ? invitation.content[item.variable] : null} onChange={e => setInvitation({

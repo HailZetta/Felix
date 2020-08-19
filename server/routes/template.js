@@ -11,7 +11,7 @@ require('../config/passport');
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     console.log(file);
-    cb(null, '../src/views/templates')
+    cb(null, 'src/views/templates')
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname)
@@ -39,7 +39,7 @@ router.post('/upload', upload.single('templateFile'), passport.authenticate('jwt
     }
 
     let uploadFile = req.file.path;
-    fs.createReadStream(uploadFile).pipe(unzipper.Extract({ path: '../src/views/templates' }));
+    fs.createReadStream(uploadFile).pipe(unzipper.Extract({ path: 'src/views/templates' }));
     fs.unlinkSync(uploadFile, (err) => {
       if (err) throw err;
     });

@@ -8,7 +8,7 @@ require('../config/passport');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '../src/views/upload');
+    cb(null, 'src/views/upload');
   },
   filename: function(req, file, cb) {
     cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);

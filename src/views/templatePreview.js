@@ -7,7 +7,7 @@ const TemplatePreview = ({match, location}) => {
   let [template, setTemplate] = useState();
   const {params: {temp_id}} = match;
   
-  const PreviewContent = lazy(() => import(template.templateFile.replace('../src/views', '.') + '/index.js'));
+  const PreviewContent = lazy(() => import(template.templateFile.replace('src/views', '.') + '/index.js'));
 
   useEffect(() => {
     TemplateService.templateListId(temp_id).then(data => setTemplate(data));
