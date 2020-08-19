@@ -22,8 +22,14 @@ const InvitationView = ({match, location}) => {
 
   const InvitationContent = () => {
     if (invitation && template) {
+      let uploadImage = null;
+      if (invitation.content.image) {
+        uploadImage = require(`./upload/${invitation.content.image}`);
+      }
+
       const props = {
         ...invitation.content,
+        image: uploadImage,
         guest: guest,
         inviId: invi_id,
         guestId: guest_id

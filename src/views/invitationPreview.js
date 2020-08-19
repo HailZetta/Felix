@@ -33,8 +33,14 @@ const InvitationPreview = ({match, location}) => {
         }
       }
 
-      props = {...props, ...invitation.content};
-      console.log(invitation.content);
+      const newProps = invitation.content;
+      let uploadImage = null;
+      if (newProps.image) {
+        uploadImage = require(`./upload/${invitation.content.image}`);
+        newProps.image = uploadImage;
+      }
+
+      props = {...props, ...newProps};
       return (
         <div style={{height: '100vh'}}>
           <Suspense fallback={<div>Loading...</div>}>
